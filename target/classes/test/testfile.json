@@ -1,9 +1,0 @@
-{
-  "title": "Test File",
-  "author": "Piz2a",
-  "description": "A simple json file for testing.",
-  "elements": [
-    ["hello", "world"],
-    ["pizza", "yummy"]
-  ]
-}
