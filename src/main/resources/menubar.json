@@ -1,0 +1,79 @@
+[
+  {
+    "menuName": "File",
+    "items": [
+      [
+        {
+          "itemName": "New File",
+          "actionName": "NewFile"
+        },
+        {
+          "itemName": "Open",
+          "actionName": "Open"
+        },
+        {
+          "itemName": "Recent Files",
+          "actionName": "RecentFiles"
+        }
+      ],
+      [
+        {
+          "itemName": "Edit",
+          "actionName": "Edit"
+        }
+      ],
+      [
+        {
+          "itemName": "Options",
+          "actionName": "Options"
+        }
+      ],
+      [
+        {
+          "itemName": "Save",
+          "actionName": "Save"
+        },
+        {
+          "itemName": "Save As...",
+          "actionName": "SaveAs"
+        }
+      ],
+      [
+        {
+          "itemName": "Exit",
+          "actionName": "Exit"
+        }
+      ]
+    ]
+  },
+  {
+    "menuName": "Test",
+    "items": [
+      [
+        {
+          "itemName": "Normal Test",
+          "actionName": "Normal"
+        },
+        {
+          "itemName": "Quick Test",
+          "actionName": "Quick"
+        }
+      ]
+    ]
+  },
+  {
+    "menuName": "Help",
+    "items": [
+      [
+        {
+          "itemName": "Manual",
+          "actionName": "Manual"
+        },
+        {
+          "itemName": "About",
+          "actionName": "About"
+        }
+      ]
+    ]
+  }
+]
