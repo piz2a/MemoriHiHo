@@ -1,0 +1,4 @@
+#Default Settings
+#Thu Jul 29 16:19:46 KST 2021
+lang=korean
+extension=mhd
