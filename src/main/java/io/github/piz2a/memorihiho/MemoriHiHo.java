@@ -19,7 +19,7 @@ public class MemoriHiHo extends JFrame {
 
     private PanelManager panelManager;
     private File file;
-    private JSONObject currentFileObject;
+    private JSONObject currentFileObject = null;
     private boolean isNewFileBoolean;
     private boolean haveChangesBoolean;
 

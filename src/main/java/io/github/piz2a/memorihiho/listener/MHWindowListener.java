@@ -19,30 +19,13 @@ public class MHWindowListener extends WindowAdapter {
 
     @Override
     public void windowClosing(WindowEvent windowEvent) {
-        // If the user is editing, make a popup and ask
-        if (frame.getPanelManager().getCurrentPanelName().equals(PanelManager.EDIT_PANEL)) {
+        if (MenuItemActions.FileActions.confirmWhenClosing(frame)) {
             if (JOptionPane.showConfirmDialog(frame,
-                    "Apply the edits?", "Apply edits Before Closing",
+                    "Are you sure you want to exit MemorizationTest?", "Confirm Exit",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-                ((EditPanel) frame.getPanelManager().getCurrentPanel()).applyChanges();
+                System.exit(0);
             }
-        }
-        // If there are unsaved changes, make a popup and ask
-        if (frame.haveChanges()) {
-            if (JOptionPane.showConfirmDialog(frame,
-                    "Save Changes?", "Save Before Closing",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-                MenuItemActions.FileActions.save(frame);
-            }
-        }
-
-        if (JOptionPane.showConfirmDialog(frame,
-                "Are you sure you want to exit MemorizationTest?", "Confirm Exit",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-            System.exit(0);
         }
     }
 

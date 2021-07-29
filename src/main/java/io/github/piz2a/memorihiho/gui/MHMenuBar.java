@@ -104,28 +104,28 @@ public class MHMenuBar {
     private ActionListener getActionListener(String actionName) {
         ActionListener listener = e -> {};
         switch(actionName) {
-            case "NewFile":
+            case "new_file":
                 listener = e -> MenuItemActions.FileActions.newFile(frame);
                 break;
-            case "Open":
+            case "open":
                 listener = e -> MenuItemActions.FileActions.open(frame);
                 break;
-            case "RecentFiles":
+            case "recent_files":
                 listener = e -> MenuItemActions.FileActions.recentFiles();
                 break;
-            case "Edit":
+            case "edit":
                 listener = e -> MenuItemActions.FileActions.edit(frame);
                 break;
-            case "Options":
-                listener = e -> MenuItemActions.FileActions.options();
+            case "settings":
+                listener = e -> MenuItemActions.FileActions.settings();
                 break;
-            case "Save":
+            case "save":
                 listener = e -> MenuItemActions.FileActions.save(frame);
                 break;
-            case "SaveAs":
+            case "save_as":
                 listener = e -> MenuItemActions.FileActions.saveAs(frame);
                 break;
-            case "Exit":
+            case "exit":
                 listener = e -> MenuItemActions.FileActions.exit(frame);
                 break;
         }

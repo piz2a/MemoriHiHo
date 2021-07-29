@@ -53,7 +53,7 @@ public class PreviewPanel extends MHPanel {
                 itemPanel.setBorder(new LineBorder(Color.BLACK));
 
                 JLabel itemLabel = new JLabel(Integer.toString(i++));
-                itemLabel.setPreferredSize(new Dimension(30, 20));
+                itemLabel.setPreferredSize(new Dimension(20, 20));
                 itemPanel.add(itemLabel);
 
                 JPanel elementItemPanel = new JPanel();
@@ -77,7 +77,7 @@ public class PreviewPanel extends MHPanel {
         return new DisplayPanel(frame);
     }
 
-
+    // Bottom Panel including buttons
     static class BottomPanel extends JPanel {
         private BottomPanel(MemoriHiHo frame, PreviewPanel panel) {
             setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 10));

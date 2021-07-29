@@ -5,43 +5,43 @@
       [
         {
           "itemName": "New File",
-          "actionName": "NewFile"
+          "actionName": "new_file"
         },
         {
           "itemName": "Open",
-          "actionName": "Open"
+          "actionName": "open"
         },
         {
           "itemName": "Recent Files",
-          "actionName": "RecentFiles"
+          "actionName": "recent_files"
         }
       ],
       [
         {
           "itemName": "Edit",
-          "actionName": "Edit"
+          "actionName": "edit"
         }
       ],
       [
         {
-          "itemName": "Options",
-          "actionName": "Options"
+          "itemName": "Settings",
+          "actionName": "settings"
         }
       ],
       [
         {
           "itemName": "Save",
-          "actionName": "Save"
+          "actionName": "save"
         },
         {
           "itemName": "Save As...",
-          "actionName": "SaveAs"
+          "actionName": "save_as"
         }
       ],
       [
         {
           "itemName": "Exit",
-          "actionName": "Exit"
+          "actionName": "exit"
         }
       ]
     ]
@@ -52,11 +52,11 @@
       [
         {
           "itemName": "Normal Test",
-          "actionName": "Normal"
+          "actionName": "normal_test"
         },
         {
           "itemName": "Quick Test",
-          "actionName": "Quick"
+          "actionName": "quick_test"
         }
       ]
     ]
@@ -67,11 +67,11 @@
       [
         {
           "itemName": "Manual",
-          "actionName": "Manual"
+          "actionName": "manual"
         },
         {
           "itemName": "About",
-          "actionName": "About"
+          "actionName": "about"
         }
       ]
     ]

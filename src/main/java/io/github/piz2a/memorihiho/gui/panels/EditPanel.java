@@ -2,6 +2,7 @@ package io.github.piz2a.memorihiho.gui.panels;
 
 import io.github.piz2a.memorihiho.MemoriHiHo;
 import io.github.piz2a.memorihiho.gui.PanelManager;
+import io.github.piz2a.memorihiho.gui.ShapedButton;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -88,19 +89,23 @@ public class EditPanel extends MHPanel {
         // Row class
         static class ItemPanel extends JPanel {
             DisplayPanel displayPanel;
+            MemoriHiHo frame;
             JLabel itemLabel;
             JPanel swapButtonPanel;
             ElementItemPanel elementItemPanel;
+            ShapedButton destroyButton;
+
             ItemPanel(DisplayPanel displayPanel, MemoriHiHo frame, int i, String key, String data) {
                 super();
                 this.displayPanel = displayPanel;
+                this.frame = frame;
 
                 setLayout(new FlowLayout(FlowLayout.LEFT, 20, 10));
                 setBorder(new LineBorder(Color.BLACK));
 
                 // Number label
                 itemLabel = new JLabel(Integer.toString(i+1));
-                itemLabel.setPreferredSize(new Dimension(30, 20));
+                itemLabel.setPreferredSize(new Dimension(20, 20));
                 add(itemLabel);
 
                 // 위치 변경 버튼 설치
@@ -109,23 +114,12 @@ public class EditPanel extends MHPanel {
 
                 // Displaying keys and data
                 elementItemPanel = new ElementItemPanel(frame, key, data);
-
                 add(elementItemPanel);
+
+                // Destroy Button
+                destroyButton = getDestroyButton(i);
+                add(destroyButton);
             }
-
-            // TextField Panel
-            static class ElementItemPanel extends JPanel {
-                JTextField keyTextField, dataTextField;
-                ElementItemPanel(MemoriHiHo frame, String key, String data) {
-                    setLayout(new GridLayout(1, 2));
-                    setPreferredSize(new Dimension(frame.width - 200, 20));
-
-                    keyTextField = new JTextField(key, 15);
-                    dataTextField = new JTextField(data, 15);
-                    add(keyTextField);
-                    add(dataTextField);
-                }
-            } // End of ElementItemPanel
 
             static class SwapButtonPanel extends JPanel {
                 MemoriHiHo frame;
@@ -133,14 +127,14 @@ public class EditPanel extends MHPanel {
                     this.frame = frame;
                     setLayout(new BorderLayout(0, 6));
 
-                    ShapedButton upButton = new ShapedButton(new Color(i == 0 ? 0xAAAAAA : 0x880000)) {
+                    ShapedButton upButton = new ShapedButton(new Color(i == 0 ? 0xAAAAAA : 0x6666AA)) {
                         final int size = 8;
                         @Override
                         public Dimension getPreferredSize() {
                             return new Dimension(2*size, size);
                         }
                         @Override
-                        Shape createShape() {
+                        protected Shape createShape() {
                             // Triangle
                             Polygon p = new Polygon();
                             p.addPoint(0, size);
@@ -150,7 +144,20 @@ public class EditPanel extends MHPanel {
                         }
                     };
                     if (i != 0)
-                        upButton.addActionListener(new SwapActionListener(displayPanel, i, i - 1));
+                        upButton.addActionListener(e -> {
+                            // Text swapping
+                            System.out.printf("Text Swapping: %s, %s%n", i, i - 1);
+                            Component[] components = this.getComponents(); // ItemPanel을 add한 후에 함수를 호출해야 하므로 Constructor에서 하면 안 된다.
+                            //System.out.println(components.length); // Debug
+                            ItemPanel.ElementItemPanel thisPanel = ((ItemPanel) components[i]).elementItemPanel;
+                            ItemPanel.ElementItemPanel thatPanel = ((ItemPanel) components[i - 1]).elementItemPanel;
+                            String keyText = thisPanel.keyTextField.getText();
+                            String dataText = thisPanel.dataTextField.getText();
+                            thisPanel.keyTextField.setText(thatPanel.keyTextField.getText());
+                            thisPanel.dataTextField.setText(thatPanel.dataTextField.getText());
+                            thatPanel.keyTextField.setText(keyText);
+                            thatPanel.dataTextField.setText(dataText);
+                        });
                     add(upButton, BorderLayout.NORTH);
 
                     ShapedButton addButton = new ShapedButton(new Color(0x00AA00)) {
@@ -160,7 +167,7 @@ public class EditPanel extends MHPanel {
                             return new Dimension(3*size, 3*size);
                         }
                         @Override
-                        Shape createShape() {
+                        protected Shape createShape() {
                             // Cross shape
                             Polygon p = new Polygon();
                             p.addPoint(size, 0);
@@ -178,86 +185,93 @@ public class EditPanel extends MHPanel {
                             return p;
                         }
                     };
-                    addButton.addActionListener(new AddActionListener(displayPanel, frame, i + 1));
+                    addButton.addActionListener(e -> {
+                        System.out.println("Add Button Clicked: " + i);
+                        // Adding an ItemPanel
+                        displayPanel.add(new ItemPanel(displayPanel, frame, displayPanel.getComponentCount(), "", ""));
+                        Component[] components = displayPanel.getComponents();
+                        // Pushing texts one by one
+                        for (int k = components.length - 2; k >= i+1; k--) {
+                            displayPanel.moveItemText(components, k, k+1);
+                        }
+                        ItemPanel itemPanel = (ItemPanel) components[i+1];
+                        itemPanel.elementItemPanel.keyTextField.setText("");
+                        itemPanel.elementItemPanel.dataTextField.setText("");
+                        frame.refresh();
+                    });
                     add(addButton, BorderLayout.SOUTH);
                 } // End of constructor
 
-                static class SwapActionListener implements ActionListener {
-                    DisplayPanel displayPanel;
-                    int index, swapIndex;
-                    SwapActionListener(DisplayPanel displayPanel, int index, int swapIndex) {
-                        this.displayPanel = displayPanel;
-                        this.index = index;
-                        this.swapIndex = swapIndex;
-                    }
-
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        displayPanel.swapItem(index, swapIndex);
-                    }
-                } // End of SwapActionListener
-
-                static class AddActionListener implements ActionListener {
-                    DisplayPanel displayPanel;
-                    MemoriHiHo frame;
-                    int index;
-                    AddActionListener(DisplayPanel displayPanel, MemoriHiHo frame, int index) {
-                        this.displayPanel = displayPanel;
-                        this.frame = frame;
-                        this.index = index;
-                    }
-
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        // Adding an ItemPanel
-                        int rows = displayPanel.getComponentCount();
-                        displayPanel.add(new ItemPanel(displayPanel, frame, rows, "", ""));
-                        // Pushing texts one by one
-                        for (int i = rows - 1; i >= index; i--) {
-                            displayPanel.swapItem(i, i + 1);
-                        }
-                    }
-                }
             } // End of SwapButtonPanel
 
-            abstract static class ShapedButton extends JButton {
-                private final Shape shape = createShape();
-                private final Color color;
+            // TextField Panel
+            static class ElementItemPanel extends JPanel {
+                JTextField keyTextField, dataTextField;
+                ElementItemPanel(MemoriHiHo frame, String key, String data) {
+                    setLayout(new GridLayout(1, 2));
+                    setPreferredSize(new Dimension(frame.width - 200, 20));
 
-                ShapedButton(Color color) {
-                    this.color = color;
+                    keyTextField = new JTextField(key, 15);
+                    dataTextField = new JTextField(data, 15);
+                    add(keyTextField);
+                    add(dataTextField);
                 }
+            } // End of ElementItemPanel
 
-                public void paintBorder(Graphics g) {
-                    ((Graphics2D)g).draw(shape);
-                }
-                public void paintComponent(Graphics g) {
-                    g.setColor(color);
-                    ((Graphics2D)g).fill(shape);
-                }
-                public boolean contains(int x, int y) {
-                    return shape.contains(x, y);
-                }
-
-                abstract public Dimension getPreferredSize();
-                abstract Shape createShape();
-            } // End of ShapedButton
+            ShapedButton getDestroyButton(int index) {
+                ShapedButton destroyButton = new ShapedButton(new Color(0xFF0000)) {
+                    final int size = 4;
+                    @Override
+                    public Dimension getPreferredSize() {
+                        return new Dimension(6*size, 6*size);
+                    }
+                    @Override
+                    protected Shape createShape() {
+                        // X Shape
+                        Polygon p = new Polygon();
+                        p.addPoint(size, 0);
+                        p.addPoint(0, size);
+                        p.addPoint(2*size, 3*size);
+                        p.addPoint(0, 5*size);
+                        p.addPoint(size, 6*size);
+                        p.addPoint(3*size, 4*size);
+                        p.addPoint(5*size, 6*size);
+                        p.addPoint(6*size, 5*size);
+                        p.addPoint(4*size, 3*size);
+                        p.addPoint(6*size, size);
+                        p.addPoint(5*size, 0);
+                        p.addPoint(3*size, 2*size);
+                        return p;
+                    }
+                };
+                destroyButton.addActionListener(e -> {
+                    System.out.println("Destroy Button Clicked: " + index);
+                    Component[] components = displayPanel.getComponents();
+                    // Block the action if there's only one row left
+                    if (components.length == 1) {
+                        JOptionPane.showMessageDialog(
+                                frame, "You can't remove the row if there are only one left!", "Cannot remove this row", JOptionPane.WARNING_MESSAGE
+                        );
+                        return;
+                    }
+                    // Pushing texts one by one
+                    for (int k = index; k < components.length - 1; k++) {
+                        displayPanel.moveItemText(components, k + 1, k);
+                    }
+                    // Removing the last row
+                    displayPanel.remove(components.length - 1);
+                    frame.refresh();
+                });
+                return destroyButton;
+            }
 
         } // End of ItemPanel
 
-        void swapItem(int index, int swapIndex) {
-            // Text swapping
-            System.out.printf("Text Swapping: %s, %s%n", index, swapIndex);
-            Component[] components = this.getComponents(); // ItemPanel을 add한 후에 함수를 호출해야 하므로 Constructor에서 하면 안 된다.
-            System.out.println(components.length); // Debug
-            ItemPanel.ElementItemPanel thisPanel = ((ItemPanel) components[index]).elementItemPanel;
-            ItemPanel.ElementItemPanel thatPanel = ((ItemPanel) components[swapIndex]).elementItemPanel;
-            String keyText = thisPanel.keyTextField.getText();
-            String dataText = thisPanel.dataTextField.getText();
-            thisPanel.keyTextField.setText(thatPanel.keyTextField.getText());
-            thisPanel.dataTextField.setText(thatPanel.dataTextField.getText());
-            thatPanel.keyTextField.setText(keyText);
-            thatPanel.dataTextField.setText(dataText);
+        void moveItemText(Component[] components, int indexFrom, int indexTo) {
+            ItemPanel.ElementItemPanel panelFrom = ((ItemPanel) components[indexFrom]).elementItemPanel;
+            ItemPanel.ElementItemPanel panelTo = ((ItemPanel) components[indexTo]).elementItemPanel;
+            panelTo.keyTextField.setText(panelFrom.keyTextField.getText());
+            panelTo.dataTextField.setText(panelFrom.dataTextField.getText());
         }
 
     } // End of DisplayPanel
@@ -267,7 +281,7 @@ public class EditPanel extends MHPanel {
         return new DisplayPanel(frame);
     }
 
-
+    // Bottom Panel including buttons
     static class BottomPanel extends JPanel {
         private BottomPanel(MemoriHiHo frame, EditPanel panel) {
             setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 10));
@@ -301,7 +315,9 @@ public class EditPanel extends MHPanel {
             String dataText = dataTextField.getText();
 
             if (keyText.equals("") || dataText.equals("")) {
-                JOptionPane.showMessageDialog(this, "Please fill the blanks!", "Blanks Found", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(
+                        frame, "Please fill the blanks!", "Blanks Found", JOptionPane.WARNING_MESSAGE
+                );
                 System.out.println("Failed to apply changes.");
                 return;
             }

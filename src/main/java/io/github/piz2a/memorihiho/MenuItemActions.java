@@ -1,6 +1,7 @@
 package io.github.piz2a.memorihiho;
 
 import io.github.piz2a.memorihiho.gui.PanelManager;
+import io.github.piz2a.memorihiho.gui.panels.EditPanel;
 import io.github.piz2a.memorihiho.utils.TextFileToString;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -18,6 +19,10 @@ public class MenuItemActions {
 
         public static void newFile(MemoriHiHo frame) {
             System.out.println("NewFile");
+            if (!confirmWhenClosing(frame)) {
+                System.out.println("NewFile cancelled");
+                return;
+            }
             String jsonData = TextFileToString.getFromResources("untitled.json");
             openFile(frame, jsonData, null, true);
         }
@@ -26,7 +31,7 @@ public class MenuItemActions {
             System.out.println("Open");
 
             final JFileChooser fc = new JFileChooser();
-            FileNameExtensionFilter filter = new FileNameExtensionFilter("JSON File", "json");
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("MemoriHiHo Data File (.mhd)", "mhd");
             fc.setFileFilter(filter);
 
             int returnVal = fc.showOpenDialog(frame);
@@ -35,6 +40,11 @@ public class MenuItemActions {
                 java.io.File file = fc.getSelectedFile();
                 System.out.println("Opening " + file.getName());
                 String jsonData = TextFileToString.get(file.toURI());
+
+                if (!confirmWhenClosing(frame)) {
+                    System.out.println("Opening cancelled");
+                    return;
+                }
 
                 openFile(frame, jsonData, file,false);
             } else {
@@ -47,6 +57,7 @@ public class MenuItemActions {
             try {
                 frame.setCurrentFileObject((JSONObject) parser.parse(jsonData));
                 frame.setIsNewFile(isNewFile);
+                frame.setHaveChanges(false);
                 // System.out.println(frame.getCurrentFileObject()); // Debug
 
                 frame.setFile(file);
@@ -65,35 +76,32 @@ public class MenuItemActions {
             frame.getPanelManager().setPanel(PanelManager.EDIT_PANEL);
         }
 
-        public static void options() {
-            System.out.println("Options");
+        public static void settings() {
+            System.out.println("Settings");
         }
 
-        public static void save(MemoriHiHo frame) {
+        public static boolean save(MemoriHiHo frame) {
             System.out.println("Save");
-            if (frame.isNewFile()) {
-                saveAs(frame);
-            } else {
-                saveFile(frame, frame.getFile());
-            }
+            if (frame.isNewFile())
+                return saveAs(frame);
+            return saveFile(frame, frame.getFile());
         }
 
-        public static void saveAs(MemoriHiHo frame) {
+        public static boolean saveAs(MemoriHiHo frame) {
             System.out.println("SaveAs");
             final JFileChooser fc = new JFileChooser();
-            FileNameExtensionFilter filter = new FileNameExtensionFilter("JSON File", "json");
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("MemoriHiHo Data File (.mhd)", "mhd");
             fc.setFileFilter(filter);
 
             int returnVal = fc.showSaveDialog(frame);
 
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                saveFile(frame, fc.getSelectedFile());
-            } else {
-                System.out.println("Saving cancelled");
-            }
+            if (returnVal == JFileChooser.APPROVE_OPTION)
+                return saveFile(frame, fc.getSelectedFile());
+            System.out.println("Saving cancelled");
+            return false;
         }
 
-        private static void saveFile(MemoriHiHo frame, java.io.File file) {
+        private static boolean saveFile(MemoriHiHo frame, java.io.File file) {
             try (FileWriter fileWriter = new FileWriter(file)) {
                 System.out.println("Saving " + file.getName());
                 fileWriter.write(frame.getCurrentFileObject().toJSONString());
@@ -103,15 +111,55 @@ public class MenuItemActions {
                 frame.setIsNewFile(false);
                 frame.setFile(file);
                 frame.updateTitle();
+                return true;
             } catch (IOException e) {
                 e.printStackTrace();
+                return false;
             }
         }
 
-        public static void exit(JFrame frame) {
+        public static void exit(MemoriHiHo frame) {
             System.out.println("Exit");
             // Try to close JFrame
             frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+        }
+
+        public static boolean confirmWhenClosing(MemoriHiHo frame) {
+            // Only when a file is open
+            if (frame.getCurrentFileObject() == null)
+                return true;
+
+            // If the user is editing, make a popup and ask
+            if (frame.getPanelManager().getCurrentPanelName().equals(PanelManager.EDIT_PANEL)) {
+                switch (JOptionPane.showConfirmDialog(frame,
+                        "Apply the edits?", "Confirm Apply edits Before Closing",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE)) {
+                    case JOptionPane.YES_OPTION:
+                        ((EditPanel) frame.getPanelManager().getCurrentPanel()).applyChanges();
+                        break;
+                    case JOptionPane.NO_OPTION:
+                        break;
+                    case JOptionPane.CLOSED_OPTION:
+                        return false;
+                }
+            }
+            // If there are unsaved changes, make a popup and ask
+            if (frame.haveChanges()) {
+                switch (JOptionPane.showConfirmDialog(frame,
+                        "Save Changes?", "Confirm Save Before Closing",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE)) {
+                    case JOptionPane.YES_OPTION:
+                        if (!MenuItemActions.FileActions.save(frame)) return false;
+                        break;
+                    case JOptionPane.NO_OPTION:
+                        break;
+                    case JOptionPane.CLOSED_OPTION:
+                        return false;
+                }
+            }
+            return true;
         }
 
     }

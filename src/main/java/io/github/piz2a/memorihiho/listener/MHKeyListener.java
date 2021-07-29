@@ -30,6 +30,9 @@ public class MHKeyListener extends KeyAdapter {
                 case KeyEvent.VK_S:
                     MenuItemActions.FileActions.save(frame);
                     break;
+                case KeyEvent.VK_E:
+                    MenuItemActions.FileActions.edit(frame);
+                    break;
             }
         } else {
             pressedControl = key == KeyEvent.VK_CONTROL;

@@ -1,7 +1,6 @@
 package io.github.piz2a.memorihiho.utils;
 
 import javax.swing.*;
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -16,7 +15,7 @@ public class TextFileToString {
             return new String(Files.readAllBytes(Paths.get(uri)));
         } catch (IOException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Error: " + e.getClass().getName(), JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error: " + e.getClass().getName(), JOptionPane.ERROR_MESSAGE);
         }
         return null;
     }
@@ -30,13 +29,10 @@ public class TextFileToString {
             return get(resource.toURI());
         } catch (URISyntaxException | IllegalArgumentException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Error: " + e.getClass().getName(), JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error: " + e.getClass().getName(), JOptionPane.ERROR_MESSAGE);
             System.exit(1);
         }
         return null;
     }
 
-    public static String getFromPath(String path) {
-        return get(new File(path).toURI());
-    }
 }
