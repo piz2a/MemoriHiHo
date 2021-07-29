@@ -10,9 +10,8 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
-public class EditPanel extends MTPanel {
+public class EditPanel extends MHPanel {
 
     public EditPanel(MemoriHiHo frame) {
         super(frame);
@@ -69,7 +68,6 @@ public class EditPanel extends MTPanel {
 
     // Displaying elements
     static class DisplayPanel extends JPanel {
-        ArrayList<ItemPanel> itemPanelList = new ArrayList<>();
         private DisplayPanel(MemoriHiHo frame) {
             setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -81,7 +79,7 @@ public class EditPanel extends MTPanel {
                 String data = (String) elementArray.get(1);
 
                 // Adding a row
-                add(new ItemPanel(this, frame, elementsArray.size(), i, key, data));
+                add(new ItemPanel(this, frame, i, key, data));
 
                 i++;
             }
@@ -93,7 +91,7 @@ public class EditPanel extends MTPanel {
             JLabel itemLabel;
             JPanel swapButtonPanel;
             ElementItemPanel elementItemPanel;
-            ItemPanel(DisplayPanel displayPanel, MemoriHiHo frame, int arrayLength, int i, String key, String data) {
+            ItemPanel(DisplayPanel displayPanel, MemoriHiHo frame, int i, String key, String data) {
                 super();
                 this.displayPanel = displayPanel;
 
@@ -106,7 +104,7 @@ public class EditPanel extends MTPanel {
                 add(itemLabel);
 
                 // 위치 변경 버튼 설치
-                swapButtonPanel = new SwapButtonPanel(displayPanel, arrayLength, i);
+                swapButtonPanel = new SwapButtonPanel(displayPanel, frame, i);
                 add(swapButtonPanel);
 
                 // Displaying keys and data
@@ -127,13 +125,16 @@ public class EditPanel extends MTPanel {
                     add(keyTextField);
                     add(dataTextField);
                 }
-            }
+            } // End of ElementItemPanel
 
             static class SwapButtonPanel extends JPanel {
-                SwapButtonPanel(DisplayPanel displayPanel, int arrayLength, int i) {
+                MemoriHiHo frame;
+                SwapButtonPanel(DisplayPanel displayPanel, MemoriHiHo frame, int i) {
+                    this.frame = frame;
                     setLayout(new BorderLayout(0, 6));
 
                     ShapedButton upButton = new ShapedButton(new Color(i == 0 ? 0xAAAAAA : 0x880000)) {
+                        final int size = 8;
                         @Override
                         public Dimension getPreferredSize() {
                             return new Dimension(2*size, size);
@@ -152,25 +153,34 @@ public class EditPanel extends MTPanel {
                         upButton.addActionListener(new SwapActionListener(displayPanel, i, i - 1));
                     add(upButton, BorderLayout.NORTH);
 
-                    ShapedButton downButton = new ShapedButton(new Color(i == arrayLength - 1 ? 0xAAAAAA : 0x008800)) {
+                    ShapedButton addButton = new ShapedButton(new Color(0x00AA00)) {
+                        final int size = 5;
                         @Override
                         public Dimension getPreferredSize() {
-                            return new Dimension(2*size, size);
+                            return new Dimension(3*size, 3*size);
                         }
                         @Override
                         Shape createShape() {
-                            // Triangle
+                            // Cross shape
                             Polygon p = new Polygon();
-                            p.addPoint(0, 0);
+                            p.addPoint(size, 0);
                             p.addPoint(size, size);
-                            p.addPoint(2 * size, 0);
+                            p.addPoint(0, size);
+                            p.addPoint(0, 2*size);
+                            p.addPoint(size, 2*size);
+                            p.addPoint(size, 3*size);
+                            p.addPoint(2*size, 3*size);
+                            p.addPoint(2*size, 2*size);
+                            p.addPoint(3*size, 2*size);
+                            p.addPoint(3*size, size);
+                            p.addPoint(2*size, size);
+                            p.addPoint(2*size, 0);
                             return p;
                         }
                     };
-                    if (i != arrayLength - 1)
-                        downButton.addActionListener(new SwapActionListener(displayPanel, i, i + 1));
-                    add(downButton, BorderLayout.SOUTH);
-                }
+                    addButton.addActionListener(new AddActionListener(displayPanel, frame, i + 1));
+                    add(addButton, BorderLayout.SOUTH);
+                } // End of constructor
 
                 static class SwapActionListener implements ActionListener {
                     DisplayPanel displayPanel;
@@ -183,26 +193,36 @@ public class EditPanel extends MTPanel {
 
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        // Text swapping
-                        System.out.printf("Text Swapping: %s, %s%n", index, swapIndex);
-                        Component[] components = displayPanel.getComponents(); // ItemPanel을 add한 후에 함수를 호출해야 하므로 Constructor에서 하면 안 된다.
-                        System.out.println(components.length); // Debug
-                        ElementItemPanel thisPanel = ((ItemPanel) components[index]).elementItemPanel;
-                        ElementItemPanel thatPanel = ((ItemPanel) components[swapIndex]).elementItemPanel;
-                        String keyText = thisPanel.keyTextField.getText();
-                        String dataText = thisPanel.dataTextField.getText();
-                        thisPanel.keyTextField.setText(thatPanel.keyTextField.getText());
-                        thisPanel.dataTextField.setText(thatPanel.dataTextField.getText());
-                        thatPanel.keyTextField.setText(keyText);
-                        thatPanel.dataTextField.setText(dataText);
+                        displayPanel.swapItem(index, swapIndex);
+                    }
+                } // End of SwapActionListener
+
+                static class AddActionListener implements ActionListener {
+                    DisplayPanel displayPanel;
+                    MemoriHiHo frame;
+                    int index;
+                    AddActionListener(DisplayPanel displayPanel, MemoriHiHo frame, int index) {
+                        this.displayPanel = displayPanel;
+                        this.frame = frame;
+                        this.index = index;
+                    }
+
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        // Adding an ItemPanel
+                        int rows = displayPanel.getComponentCount();
+                        displayPanel.add(new ItemPanel(displayPanel, frame, rows, "", ""));
+                        // Pushing texts one by one
+                        for (int i = rows - 1; i >= index; i--) {
+                            displayPanel.swapItem(i, i + 1);
+                        }
                     }
                 }
-            }
+            } // End of SwapButtonPanel
 
             abstract static class ShapedButton extends JButton {
                 private final Shape shape = createShape();
                 private final Color color;
-                final int size = 8;
 
                 ShapedButton(Color color) {
                     this.color = color;
@@ -221,11 +241,26 @@ public class EditPanel extends MTPanel {
 
                 abstract public Dimension getPreferredSize();
                 abstract Shape createShape();
-            }
+            } // End of ShapedButton
 
+        } // End of ItemPanel
+
+        void swapItem(int index, int swapIndex) {
+            // Text swapping
+            System.out.printf("Text Swapping: %s, %s%n", index, swapIndex);
+            Component[] components = this.getComponents(); // ItemPanel을 add한 후에 함수를 호출해야 하므로 Constructor에서 하면 안 된다.
+            System.out.println(components.length); // Debug
+            ItemPanel.ElementItemPanel thisPanel = ((ItemPanel) components[index]).elementItemPanel;
+            ItemPanel.ElementItemPanel thatPanel = ((ItemPanel) components[swapIndex]).elementItemPanel;
+            String keyText = thisPanel.keyTextField.getText();
+            String dataText = thisPanel.dataTextField.getText();
+            thisPanel.keyTextField.setText(thatPanel.keyTextField.getText());
+            thisPanel.dataTextField.setText(thatPanel.dataTextField.getText());
+            thatPanel.keyTextField.setText(keyText);
+            thatPanel.dataTextField.setText(dataText);
         }
 
-    }
+    } // End of DisplayPanel
 
     @Override
     JPanel getCenterPanel() {
@@ -247,9 +282,7 @@ public class EditPanel extends MTPanel {
         return new BottomPanel(frame, this);
     }
 
-    void applyChanges() {
-        frame.setHaveChanges(true);
-
+    public void applyChanges() {
         JSONObject mtObject = new JSONObject();
 
         InfoPanel infoPanel = (InfoPanel) topPanel;
@@ -260,21 +293,31 @@ public class EditPanel extends MTPanel {
         JSONArray elementsArray = new JSONArray();
         DisplayPanel displayPanel = (DisplayPanel) centerPanel;
         for (Component component : displayPanel.getComponents()) {
-            JPanel itemPanel = (JPanel) component;
-            JPanel elementItemPanel = (JPanel) itemPanel.getComponent(1);
-            JTextField keyTextField = (JTextField) elementItemPanel.getComponent(0);
-            JTextField dataTextField = (JTextField) elementItemPanel.getComponent(1);
+            DisplayPanel.ItemPanel itemPanel = (DisplayPanel.ItemPanel) component;
+            DisplayPanel.ItemPanel.ElementItemPanel elementItemPanel = itemPanel.elementItemPanel;
+            JTextField keyTextField = elementItemPanel.keyTextField;
+            JTextField dataTextField = elementItemPanel.dataTextField;
+            String keyText = keyTextField.getText();
+            String dataText = dataTextField.getText();
+
+            if (keyText.equals("") || dataText.equals("")) {
+                JOptionPane.showMessageDialog(this, "Please fill the blanks!", "Blanks Found", JOptionPane.WARNING_MESSAGE);
+                System.out.println("Failed to apply changes.");
+                return;
+            }
 
             JSONArray elementArray = new JSONArray();
-            elementArray.add(keyTextField.getText());
-            elementArray.add(dataTextField.getText());
+            elementArray.add(keyText);
+            elementArray.add(dataText);
             elementsArray.add(elementArray);
         }
         mtObject.put("elements", elementsArray);
 
         frame.setCurrentFileObject(mtObject);
+        frame.setHaveChanges(true);
 
         frame.getPanelManager().setPanel(PanelManager.PREVIEW_PANEL);
+        System.out.println("Successfully Applied Changes");
     }
 
 }

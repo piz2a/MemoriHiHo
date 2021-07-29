@@ -6,12 +6,12 @@ import io.github.piz2a.memorihiho.MenuItemActions;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class MTKeyListener extends KeyAdapter {
+public class MHKeyListener extends KeyAdapter {
 
     private boolean pressedControl = false;
     private final MemoriHiHo frame;
 
-    public MTKeyListener(MemoriHiHo frame) {
+    public MHKeyListener(MemoriHiHo frame) {
         this.frame = frame;
     }
 

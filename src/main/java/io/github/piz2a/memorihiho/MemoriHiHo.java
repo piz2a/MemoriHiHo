@@ -1,9 +1,9 @@
 package io.github.piz2a.memorihiho;
 
-import io.github.piz2a.memorihiho.gui.MTMenuBar;
+import io.github.piz2a.memorihiho.gui.MHMenuBar;
 import io.github.piz2a.memorihiho.gui.PanelManager;
-import io.github.piz2a.memorihiho.listener.MTWindowListener;
-import io.github.piz2a.memorihiho.listener.MTKeyListener;
+import io.github.piz2a.memorihiho.listener.MHWindowListener;
+import io.github.piz2a.memorihiho.listener.MHKeyListener;
 import org.json.simple.JSONObject;
 
 import javax.swing.*;
@@ -69,7 +69,7 @@ public class MemoriHiHo extends JFrame {
 
     private void createGUI() {
         // Menu bar
-        JMenuBar menuBar = new MTMenuBar(this).getMenuBar();
+        JMenuBar menuBar = new MHMenuBar(this).getMenuBar();
         setJMenuBar(menuBar);
 
         // Content Pane Manager
@@ -80,8 +80,8 @@ public class MemoriHiHo extends JFrame {
     }
 
     private void addListeners() {
-        addWindowListener(new MTWindowListener(this));
-        addKeyListener(new MTKeyListener(this));
+        addWindowListener(new MHWindowListener(this));
+        addKeyListener(new MHKeyListener(this));
     }
 
     public void updateTitle() {

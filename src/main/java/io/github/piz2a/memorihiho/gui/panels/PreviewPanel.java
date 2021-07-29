@@ -8,7 +8,7 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 
-public class PreviewPanel extends MTPanel {
+public class PreviewPanel extends MHPanel {
 
     public PreviewPanel(MemoriHiHo frame) {
         super(frame);

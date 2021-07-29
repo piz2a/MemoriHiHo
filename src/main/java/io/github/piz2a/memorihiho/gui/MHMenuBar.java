@@ -12,13 +12,13 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
 
-public class MTMenuBar {
+public class MHMenuBar {
 
     private final MemoriHiHo frame;
     private final JMenuBar menuBar = new JMenuBar();
     private final Font font = new Font("Arial", Font.PLAIN, 16);
 
-    public MTMenuBar(MemoriHiHo frame) {
+    public MHMenuBar(MemoriHiHo frame) {
         this.frame = frame;
         create();
     }

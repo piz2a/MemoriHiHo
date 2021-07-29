@@ -6,13 +6,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-public abstract class MTPanel extends JPanel {
+public abstract class MHPanel extends JPanel {
 
     MemoriHiHo frame;
     JPanel topPanel, centerPanel, bottomPanel;
 
     // Constructor
-    public MTPanel(MemoriHiHo frame) {
+    public MHPanel(MemoriHiHo frame) {
         this.frame = frame;
     }
 
@@ -35,7 +35,7 @@ public abstract class MTPanel extends JPanel {
     abstract JPanel getBottomPanel();
 
     private static class DisplayScrollPane extends JScrollPane {
-        private DisplayScrollPane(MemoriHiHo frame, MTPanel panel) {
+        private DisplayScrollPane(MemoriHiHo frame, MHPanel panel) {
             super(
                     panel.centerPanel,
                     JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,

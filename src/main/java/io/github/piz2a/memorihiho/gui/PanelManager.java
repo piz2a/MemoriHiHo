@@ -2,7 +2,7 @@ package io.github.piz2a.memorihiho.gui;
 
 import io.github.piz2a.memorihiho.MemoriHiHo;
 import io.github.piz2a.memorihiho.gui.panels.EditPanel;
-import io.github.piz2a.memorihiho.gui.panels.MTPanel;
+import io.github.piz2a.memorihiho.gui.panels.MHPanel;
 import io.github.piz2a.memorihiho.gui.panels.PreviewPanel;
 
 import javax.swing.*;
@@ -14,9 +14,9 @@ public class PanelManager extends JPanel {
 
     MemoriHiHo frame;
     private final CardLayout cardLayout = new CardLayout();
-    private final HashMap<String, MTPanel> panelHashMap = new HashMap<>();
+    private final HashMap<String, MHPanel> panelHashMap = new HashMap<>();
     private String currentPanelName;
-    private MTPanel currentPanel = null;
+    private MHPanel currentPanel = null;
 
     public final static String PREVIEW_PANEL = "Preview";
     public final static String EDIT_PANEL = "Edit";
