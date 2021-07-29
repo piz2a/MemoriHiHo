@@ -9,8 +9,6 @@ import org.json.simple.JSONObject;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class EditPanel extends MHPanel {
 
@@ -36,12 +34,12 @@ public class EditPanel extends MHPanel {
             JPanel titleAuthorPanel = new JPanel();
             titleAuthorPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 5));
 
-            titleAuthorPanel.add(new JLabel("Title: "));
+            titleAuthorPanel.add(new JLabel(String.format("%s: ", frame.getLanguage().getProperty("editPanel.label.title"))));
 
             titleTextField = new JTextField((String) frame.getCurrentFileObject().get("title"), 16);
             titleAuthorPanel.add(titleTextField);
 
-            titleAuthorPanel.add(new JLabel("Author: "));
+            titleAuthorPanel.add(new JLabel(String.format("%s: ", frame.getLanguage().getProperty("editPanel.label.author"))));
 
             authorTextField = new JTextField((String) frame.getCurrentFileObject().get("author"), 16);
             titleAuthorPanel.add(authorTextField);
@@ -53,7 +51,7 @@ public class EditPanel extends MHPanel {
             JPanel descriptionPanel = new JPanel();
             descriptionPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 5));
 
-            descriptionPanel.add(new JLabel("Description: "));
+            descriptionPanel.add(new JLabel(String.format("%s: ", frame.getLanguage().getProperty("editPanel.label.description"))));
 
             descriptionTextField = new JTextField((String) frame.getCurrentFileObject().get("description"), 48);
             descriptionPanel.add(descriptionTextField);
@@ -105,7 +103,7 @@ public class EditPanel extends MHPanel {
 
                 // Number label
                 itemLabel = new JLabel(Integer.toString(i+1));
-                itemLabel.setPreferredSize(new Dimension(20, 20));
+                itemLabel.setPreferredSize(new Dimension(16, 20));
                 add(itemLabel);
 
                 // 위치 변경 버튼 설치
@@ -250,7 +248,10 @@ public class EditPanel extends MHPanel {
                     // Block the action if there's only one row left
                     if (components.length == 1) {
                         JOptionPane.showMessageDialog(
-                                frame, "You can't remove the row if there are only one left!", "Cannot remove this row", JOptionPane.WARNING_MESSAGE
+                                frame,
+                                frame.getLanguage().getProperty("editPanel.message.blockOneRow"),
+                                frame.getLanguage().getProperty("editPanel.message.blockOneRow.title"),
+                                JOptionPane.WARNING_MESSAGE
                         );
                         return;
                     }
@@ -286,8 +287,8 @@ public class EditPanel extends MHPanel {
         private BottomPanel(MemoriHiHo frame, EditPanel panel) {
             setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 10));
 
-            panel.addBottomButton(this, "Apply", e -> panel.applyChanges());
-            panel.addBottomButton(this, "Cancel", e -> frame.getPanelManager().setPanel(PanelManager.PREVIEW_PANEL));
+            panel.addBottomButton(this, frame.getLanguage().getProperty("editPanel.button.apply"), e -> panel.applyChanges());
+            panel.addBottomButton(this, frame.getLanguage().getProperty("editPanel.button.cancel"), e -> frame.getPanelManager().setPanel(PanelManager.PREVIEW_PANEL));
         }
     }
 
@@ -316,7 +317,10 @@ public class EditPanel extends MHPanel {
 
             if (keyText.equals("") || dataText.equals("")) {
                 JOptionPane.showMessageDialog(
-                        frame, "Please fill the blanks!", "Blanks Found", JOptionPane.WARNING_MESSAGE
+                        frame,
+                        frame.getLanguage().getProperty("editPanel.message.fillTheBlanks"),
+                        frame.getLanguage().getProperty("editPanel.message.fillTheBlanks.title"),
+                        JOptionPane.WARNING_MESSAGE
                 );
                 System.out.println("Failed to apply changes.");
                 return;

@@ -2,33 +2,46 @@ package io.github.piz2a.memorihiho;
 
 import io.github.piz2a.memorihiho.gui.MHMenuBar;
 import io.github.piz2a.memorihiho.gui.PanelManager;
+import io.github.piz2a.memorihiho.listener.DragDropListener;
 import io.github.piz2a.memorihiho.listener.MHWindowListener;
 import io.github.piz2a.memorihiho.listener.MHKeyListener;
+import io.github.piz2a.memorihiho.utils.ErrorDialog;
 import org.json.simple.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
+import java.awt.dnd.DropTarget;
+import java.io.*;
 import java.net.URL;
+import java.util.Properties;
 
 public class MemoriHiHo extends JFrame {
 
-    public final String title = "Memorization Test by piz2a";
+    public final String title = "MemoriHiHo by piz2a";
     public final int width = 800, height = 600;
+    public final String settingsFilePath = "settings.txt";
     private int screenWidth, screenHeight;
+
+    public final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
 
     private PanelManager panelManager;
     private File file;
     private JSONObject currentFileObject = null;
+    private Properties settings;
+    private Properties language;
     private boolean isNewFileBoolean;
     private boolean haveChangesBoolean;
 
     public MemoriHiHo() {
-        basicGuiSettings();
+        loadSettings();
+
+        basicGUISettings();
 
         createGUI();
 
         addListeners();
+
+        MenuItemActions.FileActions.newFile(this);
 
         // Make the window appear
         setLocation((screenWidth - width) / 2, (screenHeight - height) / 2);
@@ -38,7 +51,51 @@ public class MemoriHiHo extends JFrame {
         requestFocus();
     }
 
-    private void basicGuiSettings() {
+    public void loadSettings() {
+        File settingsFile = new File(settingsFilePath);
+
+        if (!settingsFile.exists()) {
+            // Creates default settings file
+            try {
+                Properties properties = new Properties();
+                InputStream inputStream = classloader.getResourceAsStream("settings_default.properties");
+                properties.load(inputStream);
+
+                FileWriter fileWriter = new FileWriter(settingsFile);
+                properties.store(fileWriter, "Settings");
+            } catch (IOException e) {
+                e.printStackTrace();
+                ErrorDialog.show(e);
+                System.exit(1);
+            }
+        }
+
+        // Settings
+        settings = new Properties();
+        try {
+            FileReader fileReader = new FileReader(settingsFilePath);
+            settings.load(fileReader);
+        } catch (IOException e) {
+            e.printStackTrace();
+            ErrorDialog.show(e);
+            System.exit(1);
+        }
+
+        // Language
+        language = new Properties();
+        try {
+            InputStream inputStream = classloader.getResourceAsStream(
+                    String.format("lang/%s.properties", settings.getProperty("lang"))
+            );
+            language.load(inputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+            ErrorDialog.show(e);
+            System.exit(1);
+        }
+    }
+
+    private void basicGUISettings() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         screenWidth = (int) screenSize.getWidth();
         screenHeight = (int) screenSize.getHeight();
@@ -49,9 +106,8 @@ public class MemoriHiHo extends JFrame {
         setResizable(false);
 
         // Set Icon
-        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         try {
-            URL url = classloader.getResource("icon.png");
+            URL url = classloader.getResource("icons/icon.png");
             assert url != null;
             ImageIcon img = new ImageIcon(url);
             setIconImage(img.getImage());
@@ -75,20 +131,19 @@ public class MemoriHiHo extends JFrame {
         // Content Pane Manager
         panelManager = new PanelManager(this);
         getContentPane().add(panelManager);
-
-        MenuItemActions.FileActions.newFile(this);
     }
 
     private void addListeners() {
         addWindowListener(new MHWindowListener(this));
         addKeyListener(new MHKeyListener(this));
+        new DropTarget(this, new DragDropListener(this));
     }
 
     public void updateTitle() {
         File file = getFile();
         setTitle(
                 String.format("%s - %s [%s]",
-                        title, (file == null ? "Untitled" : file.getName()), getPanelManager().getCurrentPanelName())
+                        title, (file == null ? language.getProperty("untitled") : file.getName()), getPanelManager().getCurrentPanelName())
                         + (haveChanges() ? "*" : "")
         );
     }
@@ -105,6 +160,14 @@ public class MemoriHiHo extends JFrame {
 
     public void setCurrentFileObject(JSONObject fileObject) {
         this.currentFileObject = fileObject;
+    }
+
+    public void setSettings(Properties properties) {
+        this.settings = properties;
+    }
+
+    public void setLanguage(Properties properties) {
+        this.language = properties;
     }
 
     public void setIsNewFile(boolean b) {
@@ -126,6 +189,14 @@ public class MemoriHiHo extends JFrame {
 
     public JSONObject getCurrentFileObject() {
         return currentFileObject;
+    }
+
+    public Properties getSettings() {
+        return settings;
+    }
+
+    public Properties getLanguage() {
+        return language;
     }
 
     public boolean isNewFile() {

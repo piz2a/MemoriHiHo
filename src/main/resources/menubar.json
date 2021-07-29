@@ -1,79 +1,24 @@
 [
   {
-    "menuName": "File",
+    "menuName": "file",
     "items": [
-      [
-        {
-          "itemName": "New File",
-          "actionName": "new_file"
-        },
-        {
-          "itemName": "Open",
-          "actionName": "open"
-        },
-        {
-          "itemName": "Recent Files",
-          "actionName": "recent_files"
-        }
-      ],
-      [
-        {
-          "itemName": "Edit",
-          "actionName": "edit"
-        }
-      ],
-      [
-        {
-          "itemName": "Settings",
-          "actionName": "settings"
-        }
-      ],
-      [
-        {
-          "itemName": "Save",
-          "actionName": "save"
-        },
-        {
-          "itemName": "Save As...",
-          "actionName": "save_as"
-        }
-      ],
-      [
-        {
-          "itemName": "Exit",
-          "actionName": "exit"
-        }
-      ]
+      ["new_file", "open", "recent_files"],
+      ["edit"],
+      ["settings"],
+      ["save", "save_as"],
+      ["exit"]
     ]
   },
   {
-    "menuName": "Test",
+    "menuName": "test",
     "items": [
-      [
-        {
-          "itemName": "Normal Test",
-          "actionName": "normal_test"
-        },
-        {
-          "itemName": "Quick Test",
-          "actionName": "quick_test"
-        }
-      ]
+      ["normal_test", "quick_test"]
     ]
   },
   {
-    "menuName": "Help",
+    "menuName": "help",
     "items": [
-      [
-        {
-          "itemName": "Manual",
-          "actionName": "manual"
-        },
-        {
-          "itemName": "About",
-          "actionName": "about"
-        }
-      ]
+      ["manual", "about"]
     ]
   }
 ]

@@ -10,13 +10,13 @@ import org.json.simple.parser.*;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.net.URL;
 import java.util.Iterator;
 
 public class MHMenuBar {
 
     private final MemoriHiHo frame;
     private final JMenuBar menuBar = new JMenuBar();
-    private final Font font = new Font("Arial", Font.PLAIN, 16);
 
     public MHMenuBar(MemoriHiHo frame) {
         this.frame = frame;
@@ -52,7 +52,8 @@ public class MHMenuBar {
 
             // Creates menu object
             JSONObject menuObject = (JSONObject) i;
-            JMenu menu = new JMenu((String) menuObject.get("menuName")) {
+            String menuName = (String) menuObject.get("menuName");
+            JMenu menu = new JMenu(frame.getLanguage().getProperty("menuBar." + menuName)) {
                 // Set menu size
                 @Override
                 public Dimension getPreferredSize() {
@@ -68,10 +69,10 @@ public class MHMenuBar {
             JSONArray itemsArray = (JSONArray) menuObject.get("items");
             for (Iterator<Object> j = itemsArray.iterator(); j.hasNext();) {
                 // Separated
-                for (Object k : (JSONArray) j.next()) {
+                for (Object menuItemObject : (JSONArray) j.next()) {
                     // Add an item
-                    JSONObject menuItemObject = (JSONObject) k;
-                    JMenuItem item = new JMenuItem((String) menuItemObject.get("itemName")) {
+                    String menuItemName = (String) menuItemObject;
+                    JMenuItem item = new JMenuItem(frame.getLanguage().getProperty("menuBarItem." + menuItemName)) {
                         // Set item size
                         @Override
                         public Dimension getPreferredSize() {
@@ -81,8 +82,12 @@ public class MHMenuBar {
                             return d;
                         }
                     };
-                    //item.setFont(font);
-                    item.addActionListener(getActionListener((String) menuItemObject.get("actionName")));
+
+                    URL iconResource = frame.classloader.getResource(String.format("icons/menubar/%s.png", menuItemName));
+                    if (iconResource != null)
+                        item.setIcon(new ImageIcon(iconResource));
+
+                    item.addActionListener(getActionListener(menuItemName));
 
                     menu.add(item);
                 }

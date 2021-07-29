@@ -49,7 +49,7 @@ public abstract class MHPanel extends JPanel {
 
     void addBottomButton(JPanel bottomPanel, String text, ActionListener actionListener) {
         JButton testButton = new JButton(text);
-        testButton.setFont(new Font("Arial", Font.PLAIN, 20));
+        testButton.setFont(new Font(frame.getLanguage().getProperty("font"), Font.PLAIN, 20));
         testButton.setPreferredSize(new Dimension(100, 60));
         testButton.addActionListener(actionListener);
         bottomPanel.add(testButton);

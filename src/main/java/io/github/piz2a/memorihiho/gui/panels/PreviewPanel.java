@@ -82,8 +82,8 @@ public class PreviewPanel extends MHPanel {
         private BottomPanel(MemoriHiHo frame, PreviewPanel panel) {
             setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 10));
 
-            panel.addBottomButton(this, "Edit", e -> MenuItemActions.FileActions.edit(frame));
-            panel.addBottomButton(this, "Test", e -> {});
+            panel.addBottomButton(this, frame.getLanguage().getProperty("previewPanel.button.edit"), e -> MenuItemActions.FileActions.edit(frame));
+            panel.addBottomButton(this, frame.getLanguage().getProperty("previewPanel.button.test"), e -> {});
         }
     }
 

@@ -2,6 +2,7 @@ package io.github.piz2a.memorihiho;
 
 import io.github.piz2a.memorihiho.gui.PanelManager;
 import io.github.piz2a.memorihiho.gui.panels.EditPanel;
+import io.github.piz2a.memorihiho.utils.ErrorDialog;
 import io.github.piz2a.memorihiho.utils.TextFileToString;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -10,6 +11,7 @@ import org.json.simple.parser.ParseException;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -31,7 +33,10 @@ public class MenuItemActions {
             System.out.println("Open");
 
             final JFileChooser fc = new JFileChooser();
-            FileNameExtensionFilter filter = new FileNameExtensionFilter("MemoriHiHo Data File (.mhd)", "mhd");
+            String extension = frame.getSettings().getProperty("extension");
+            FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                    String.format("%s (.%s)", frame.getLanguage().getProperty("extension.description"), extension), extension
+            );
             fc.setFileFilter(filter);
 
             int returnVal = fc.showOpenDialog(frame);
@@ -52,9 +57,10 @@ public class MenuItemActions {
             }
         }
 
-        private static void openFile(MemoriHiHo frame, String jsonData, java.io.File file, boolean isNewFile) {
+        public static void openFile(MemoriHiHo frame, String jsonData, java.io.File file, boolean isNewFile) {
             JSONParser parser = new JSONParser();
             try {
+                if (jsonData == null) throw new NullPointerException("jsonData is null");
                 frame.setCurrentFileObject((JSONObject) parser.parse(jsonData));
                 frame.setIsNewFile(isNewFile);
                 frame.setHaveChanges(false);
@@ -62,8 +68,14 @@ public class MenuItemActions {
 
                 frame.setFile(file);
                 frame.getPanelManager().setPanel(PanelManager.PREVIEW_PANEL);
-            } catch (ParseException e) {
+            } catch (ParseException | NullPointerException e) {
                 e.printStackTrace();
+                JOptionPane.showMessageDialog(
+                        frame,
+                        frame.getLanguage().getProperty("message.cannotOpenFile"),
+                        frame.getLanguage().getProperty("message.cannotOpenFile.title"),
+                        JOptionPane.ERROR_MESSAGE
+                );
             }
         }
 
@@ -90,18 +102,29 @@ public class MenuItemActions {
         public static boolean saveAs(MemoriHiHo frame) {
             System.out.println("SaveAs");
             final JFileChooser fc = new JFileChooser();
-            FileNameExtensionFilter filter = new FileNameExtensionFilter("MemoriHiHo Data File (.mhd)", "mhd");
+            String extension = frame.getSettings().getProperty("extension");
+            FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                    String.format("%s (.%s)", frame.getLanguage().getProperty("extension.description"), extension), extension
+            );
             fc.setFileFilter(filter);
 
             int returnVal = fc.showSaveDialog(frame);
 
-            if (returnVal == JFileChooser.APPROVE_OPTION)
-                return saveFile(frame, fc.getSelectedFile());
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                String filePath = fc.getSelectedFile().getPath();
+                // Checking extension
+                String dotExtension = "." + extension;
+                if (!filePath.endsWith(dotExtension))
+                    filePath = filePath + dotExtension;
+
+                File savingFile = new File(filePath);
+                return saveFile(frame, savingFile);
+            }
             System.out.println("Saving cancelled");
             return false;
         }
 
-        private static boolean saveFile(MemoriHiHo frame, java.io.File file) {
+        private static boolean saveFile(MemoriHiHo frame, File file) {
             try (FileWriter fileWriter = new FileWriter(file)) {
                 System.out.println("Saving " + file.getName());
                 fileWriter.write(frame.getCurrentFileObject().toJSONString());
@@ -132,7 +155,8 @@ public class MenuItemActions {
             // If the user is editing, make a popup and ask
             if (frame.getPanelManager().getCurrentPanelName().equals(PanelManager.EDIT_PANEL)) {
                 switch (JOptionPane.showConfirmDialog(frame,
-                        "Apply the edits?", "Confirm Apply edits Before Closing",
+                        frame.getLanguage().getProperty("message.confirmEdit"),
+                        frame.getLanguage().getProperty("message.confirmEdit.title"),
                         JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE)) {
                     case JOptionPane.YES_OPTION:
@@ -147,7 +171,8 @@ public class MenuItemActions {
             // If there are unsaved changes, make a popup and ask
             if (frame.haveChanges()) {
                 switch (JOptionPane.showConfirmDialog(frame,
-                        "Save Changes?", "Confirm Save Before Closing",
+                        frame.getLanguage().getProperty("message.confirmSave"),
+                        frame.getLanguage().getProperty("message.confirmSave.title"),
                         JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE)) {
                     case JOptionPane.YES_OPTION:
