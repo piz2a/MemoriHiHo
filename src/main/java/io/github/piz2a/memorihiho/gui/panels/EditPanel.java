@@ -145,7 +145,7 @@ public class EditPanel extends MHPanel {
                         upButton.addActionListener(e -> {
                             // Text swapping
                             System.out.printf("Text Swapping: %s, %s%n", i, i - 1);
-                            Component[] components = this.getComponents(); // ItemPanel을 add한 후에 함수를 호출해야 하므로 Constructor에서 하면 안 된다.
+                            Component[] components = displayPanel.getComponents(); // ItemPanel을 add한 후에 함수를 호출해야 하므로 Constructor에서 하면 안 된다.
                             //System.out.println(components.length); // Debug
                             ItemPanel.ElementItemPanel thisPanel = ((ItemPanel) components[i]).elementItemPanel;
                             ItemPanel.ElementItemPanel thatPanel = ((ItemPanel) components[i - 1]).elementItemPanel;
