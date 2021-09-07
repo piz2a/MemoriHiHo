@@ -4,7 +4,7 @@ import javax.swing.*;
 
 import io.github.piz2a.memorihiho.MemoriHiHo;
 import io.github.piz2a.memorihiho.MenuItemActions;
-import io.github.piz2a.memorihiho.utils.TextFileToString;
+import io.github.piz2a.memorihiho.utils.TextFileReader;
 import org.json.simple.*;
 import org.json.simple.parser.*;
 
@@ -26,7 +26,7 @@ public class MHMenuBar {
     private void create() {
 
         // Open and read menubar.json
-        String jsonData = TextFileToString.getFromResources("menubar.json");
+        String jsonData = frame.getTextFileReader().getStringFromResources("menubar.json");
         //System.out.println(jsonData);
 
         // Parse json
@@ -132,6 +132,18 @@ public class MHMenuBar {
                 break;
             case "exit":
                 listener = e -> MenuItemActions.FileActions.exit(frame);
+                break;
+            case "normal_test":
+                listener = e -> MenuItemActions.TestActions.normalTest(frame);
+                break;
+            case "quick_test":
+                listener = e -> MenuItemActions.TestActions.quickTest(frame);
+                break;
+            case "manual":
+                listener = e -> MenuItemActions.HelpActions.manual(frame);
+                break;
+            case "about":
+                listener = e -> MenuItemActions.HelpActions.about(frame);
                 break;
         }
         return listener;

@@ -1,9 +1,7 @@
 package io.github.piz2a.memorihiho.gui;
 
 import io.github.piz2a.memorihiho.MemoriHiHo;
-import io.github.piz2a.memorihiho.gui.panels.EditPanel;
-import io.github.piz2a.memorihiho.gui.panels.MHPanel;
-import io.github.piz2a.memorihiho.gui.panels.PreviewPanel;
+import io.github.piz2a.memorihiho.gui.panels.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,8 +31,8 @@ public class PanelManager extends JPanel {
     private void addPanels() {
         panelHashMap.put(PREVIEW_PANEL, new PreviewPanel(frame));
         panelHashMap.put(EDIT_PANEL, new EditPanel(frame));
-        //panelHashMap.put(NORMAL_TEST_PANEL, new PreviewPanel(frame));
-        //panelHashMap.put(QUICK_TEST_PANEL, new PreviewPanel(frame));
+        panelHashMap.put(NORMAL_TEST_PANEL, new NormalTestPanel(frame));
+        panelHashMap.put(QUICK_TEST_PANEL, new QuickTestPanel(frame));
 
         for (String key : panelHashMap.keySet()) {
             add(panelHashMap.get(key), key);
@@ -55,8 +53,6 @@ public class PanelManager extends JPanel {
             currentPanel.removeAll();
 
         // Swap
-        cardLayout.show(this, panelName);
-
         currentPanelName = panelName;
         currentPanel = panelHashMap.get(currentPanelName);
 
@@ -64,6 +60,8 @@ public class PanelManager extends JPanel {
         frame.updateTitle();
 
         currentPanel.initialize();
+
+        cardLayout.show(this, panelName);
 
         frame.refresh();
     }

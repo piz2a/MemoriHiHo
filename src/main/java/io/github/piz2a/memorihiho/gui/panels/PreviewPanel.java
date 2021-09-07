@@ -2,11 +2,16 @@ package io.github.piz2a.memorihiho.gui.panels;
 
 import io.github.piz2a.memorihiho.MemoriHiHo;
 import io.github.piz2a.memorihiho.MenuItemActions;
+import io.github.piz2a.memorihiho.gui.dialogs.ErrorDialog;
+import io.github.piz2a.memorihiho.gui.dialogs.MHDialog;
+import io.github.piz2a.memorihiho.gui.dialogs.PreviewTestDialog;
 import org.json.simple.JSONArray;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.WindowEvent;
+import java.net.URL;
 
 public class PreviewPanel extends MHPanel {
 
@@ -82,8 +87,16 @@ public class PreviewPanel extends MHPanel {
         private BottomPanel(MemoriHiHo frame, PreviewPanel panel) {
             setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 10));
 
-            panel.addBottomButton(this, frame.getLanguage().getProperty("previewPanel.button.edit"), e -> MenuItemActions.FileActions.edit(frame));
-            panel.addBottomButton(this, frame.getLanguage().getProperty("previewPanel.button.test"), e -> {});
+            panel.addBottomButton(
+                    this,
+                    frame.getLanguage().getProperty("previewPanel.button.edit"),
+                    e -> MenuItemActions.FileActions.edit(frame)
+            );
+            panel.addBottomButton(
+                    this,
+                    frame.getLanguage().getProperty("previewPanel.button.test"),
+                    e -> new PreviewTestDialog("PreviewPanel.testDialog", frame, panel, "Choose Test Type").open()
+            );
         }
     }
 

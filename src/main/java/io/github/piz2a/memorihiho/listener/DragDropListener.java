@@ -2,7 +2,6 @@ package io.github.piz2a.memorihiho.listener;
 
 import io.github.piz2a.memorihiho.MemoriHiHo;
 import io.github.piz2a.memorihiho.MenuItemActions;
-import io.github.piz2a.memorihiho.utils.TextFileToString;
 
 import javax.swing.*;
 import java.awt.datatransfer.DataFlavor;
@@ -35,7 +34,7 @@ public class DragDropListener implements DropTargetListener {
                     if (files.size() == 1) {  // If there's only one file
                         // Opens it
                         File file = files.get(0);
-                        String jsonData = TextFileToString.get(file.toURI());
+                        String jsonData = frame.getTextFileReader().getString(file.toURI());
                         MenuItemActions.FileActions.openFile(frame, jsonData, file, false);
                     } else {  // If two or more
                         JOptionPane.showMessageDialog(

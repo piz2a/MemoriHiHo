@@ -2,10 +2,12 @@ package io.github.piz2a.memorihiho;
 
 import io.github.piz2a.memorihiho.gui.MHMenuBar;
 import io.github.piz2a.memorihiho.gui.PanelManager;
+import io.github.piz2a.memorihiho.gui.dialogs.MHDialog;
 import io.github.piz2a.memorihiho.listener.DragDropListener;
 import io.github.piz2a.memorihiho.listener.MHWindowListener;
 import io.github.piz2a.memorihiho.listener.MHKeyListener;
-import io.github.piz2a.memorihiho.utils.ErrorDialog;
+import io.github.piz2a.memorihiho.gui.dialogs.ErrorDialog;
+import io.github.piz2a.memorihiho.utils.TextFileReader;
 import org.json.simple.JSONObject;
 
 import javax.swing.*;
@@ -13,6 +15,7 @@ import java.awt.*;
 import java.awt.dnd.DropTarget;
 import java.io.*;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Properties;
 
 public class MemoriHiHo extends JFrame {
@@ -24,6 +27,8 @@ public class MemoriHiHo extends JFrame {
 
     public final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
 
+    public final HashMap<String, MHDialog> isDialogOpen = new HashMap<>();
+    private final TextFileReader textFileReader = new TextFileReader();
     private PanelManager panelManager;
     private File file;
     private JSONObject currentFileObject = null;
@@ -83,10 +88,21 @@ public class MemoriHiHo extends JFrame {
 
         // Language
         language = new Properties();
-        try {
-            InputStream inputStream = classloader.getResourceAsStream(
-                    String.format("lang/%s.properties", settings.getProperty("lang"))
+
+        InputStream inputStream = classloader.getResourceAsStream(
+                String.format("lang/%s.properties", settings.getProperty("lang"))
+        );
+        if (inputStream == null) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    String.format("No language named \"%s\"", settings.getProperty("lang")),
+                    "Unsupported Language",
+                    JOptionPane.ERROR_MESSAGE
             );
+            System.exit(1);
+        }
+
+        try {
             language.load(inputStream);
         } catch (IOException e) {
             e.printStackTrace();
@@ -179,6 +195,18 @@ public class MemoriHiHo extends JFrame {
     }
 
     // Get values
+    public int getScreenWidth() {
+        return screenWidth;
+    }
+
+    public int getScreenHeight() {
+        return screenHeight;
+    }
+
+    public TextFileReader getTextFileReader() {
+        return textFileReader;
+    }
+
     public PanelManager getPanelManager() {
         return panelManager;
     }

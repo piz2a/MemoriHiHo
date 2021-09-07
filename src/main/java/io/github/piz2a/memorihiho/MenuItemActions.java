@@ -2,8 +2,7 @@ package io.github.piz2a.memorihiho;
 
 import io.github.piz2a.memorihiho.gui.PanelManager;
 import io.github.piz2a.memorihiho.gui.panels.EditPanel;
-import io.github.piz2a.memorihiho.utils.ErrorDialog;
-import io.github.piz2a.memorihiho.utils.TextFileToString;
+import io.github.piz2a.memorihiho.utils.TextFileReader;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -25,7 +24,7 @@ public class MenuItemActions {
                 System.out.println("NewFile cancelled");
                 return;
             }
-            String jsonData = TextFileToString.getFromResources("untitled.json");
+            String jsonData = frame.getTextFileReader().getStringFromResources("untitled.json");
             openFile(frame, jsonData, null, true);
         }
 
@@ -44,7 +43,7 @@ public class MenuItemActions {
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 java.io.File file = fc.getSelectedFile();
                 System.out.println("Opening " + file.getName());
-                String jsonData = TextFileToString.get(file.toURI());
+                String jsonData = frame.getTextFileReader().getString(file.toURI());
 
                 if (!confirmWhenClosing(frame)) {
                     System.out.println("Opening cancelled");
@@ -190,9 +189,29 @@ public class MenuItemActions {
     }
 
     public static class TestActions {
+
+        public static void normalTest(MemoriHiHo frame) {
+            System.out.println("NormalTest");
+            frame.getPanelManager().setPanel(PanelManager.NORMAL_TEST_PANEL);
+        }
+
+        public static void quickTest(MemoriHiHo frame) {
+            System.out.println("QuickTest");
+            frame.getPanelManager().setPanel(PanelManager.QUICK_TEST_PANEL);
+        }
+
     }
 
     public static class HelpActions {
+
+        public static void manual(MemoriHiHo frame) {
+            System.out.println("Manual");
+        }
+
+        public static void about(MemoriHiHo frame) {
+            System.out.println("About");
+        }
+
     }
 
 }

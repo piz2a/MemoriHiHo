@@ -1,6 +1,7 @@
 package io.github.piz2a.memorihiho.gui.panels;
 
 import io.github.piz2a.memorihiho.MemoriHiHo;
+import io.github.piz2a.memorihiho.utils.InstantButton;
 
 import javax.swing.*;
 import java.awt.*;
@@ -48,11 +49,7 @@ public abstract class MHPanel extends JPanel {
     }
 
     void addBottomButton(JPanel bottomPanel, String text, ActionListener actionListener) {
-        JButton testButton = new JButton(text);
-        testButton.setFont(new Font(frame.getLanguage().getProperty("font"), Font.PLAIN, 20));
-        testButton.setPreferredSize(new Dimension(100, 60));
-        testButton.addActionListener(actionListener);
-        bottomPanel.add(testButton);
+        bottomPanel.add(InstantButton.getButton(frame, text, null, actionListener, new Dimension(100, 60), 20));
     }
 
 }

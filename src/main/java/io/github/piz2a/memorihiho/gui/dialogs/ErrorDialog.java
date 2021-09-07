@@ -1,4 +1,4 @@
-package io.github.piz2a.memorihiho.utils;
+package io.github.piz2a.memorihiho.gui.dialogs;
 
 import javax.swing.*;
 
