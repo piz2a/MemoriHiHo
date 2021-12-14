@@ -17,7 +17,7 @@ public abstract class MHPanel extends JPanel {
         this.frame = frame;
     }
 
-    public void initialize() {
+    public void initialize() {  // Panel 추가
         setLayout(new BorderLayout());
 
         topPanel = getTopPanel();
@@ -48,8 +48,8 @@ public abstract class MHPanel extends JPanel {
         }
     }
 
-    void addBottomButton(JPanel bottomPanel, String text, ActionListener actionListener) {
-        bottomPanel.add(InstantButton.getButton(frame, text, null, actionListener, new Dimension(100, 60), 20));
+    JButton getBottomButton(String text, ActionListener actionListener) {
+        return InstantButton.getButton(frame, text, null, actionListener, new Dimension(100, 60), 20);
     }
 
 }

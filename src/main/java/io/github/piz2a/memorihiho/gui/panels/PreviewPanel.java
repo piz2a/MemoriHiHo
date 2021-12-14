@@ -19,31 +19,31 @@ public class PreviewPanel extends MHPanel {
         super(frame);
     }
 
-    static class InfoPanel extends JPanel {
-        private InfoPanel(MemoriHiHo frame) {
+    class TopPanel extends JPanel {
+        private TopPanel() {
             setLayout(new FlowLayout(FlowLayout.LEFT, 10, 5));
 
             JLabel titleLabel = new JLabel((String) frame.getCurrentFileObject().get("title"));
-            titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+            titleLabel.setFont(new Font(frame.getLanguage().getProperty("font"), Font.BOLD, 24));
             add(titleLabel);
 
             JLabel authorLabel = new JLabel("by " + frame.getCurrentFileObject().get("author"));
-            authorLabel.setFont(new Font("Arial", Font.ITALIC, 12));
+            authorLabel.setFont(new Font(frame.getLanguage().getProperty("font"), Font.ITALIC, 12));
             add(authorLabel);
 
             JLabel descriptionLabel = new JLabel((String) frame.getCurrentFileObject().get("description"));
-            descriptionLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+            descriptionLabel.setFont(new Font(frame.getLanguage().getProperty("font"), Font.PLAIN, 16));
             add(descriptionLabel);
         }
     }
 
     @Override
     JPanel getTopPanel() {
-        return new InfoPanel(frame);
+        return new TopPanel();
     }
 
-    static class DisplayPanel extends JPanel {
-        private DisplayPanel(MemoriHiHo frame) {
+    class CenterPanel extends JPanel {
+        private CenterPanel() {
             setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
             JSONArray elementsArray = (JSONArray) frame.getCurrentFileObject().get("elements");
@@ -79,30 +79,40 @@ public class PreviewPanel extends MHPanel {
 
     @Override
     JPanel getCenterPanel() {
-        return new DisplayPanel(frame);
+        return new CenterPanel();
     }
 
     // Bottom Panel including buttons
-    static class BottomPanel extends JPanel {
-        private BottomPanel(MemoriHiHo frame, PreviewPanel panel) {
-            setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+    class BottomPanel extends JPanel {
+        private BottomPanel(PreviewPanel panel) {
+            JPanel leftBottomPanel = new JPanel();
+            setLayout(new BorderLayout());
 
-            panel.addBottomButton(
-                    this,
+            leftBottomPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
+            JLabel shuffleLabel = new JLabel(frame.getLanguage().getProperty(
+                    (boolean) frame.getCurrentFileObject().get("shuffle") ? "previewPanel.label.shuffle" : "previewPanel.label.notShuffle"
+            ));
+            shuffleLabel.setFont(new Font(frame.getLanguage().getProperty("font"), Font.PLAIN, 12));
+            leftBottomPanel.add(shuffleLabel);
+            add(leftBottomPanel, BorderLayout.WEST);
+
+            JPanel rightBottomPanel = new JPanel();
+            rightBottomPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+            rightBottomPanel.add(panel.getBottomButton(
                     frame.getLanguage().getProperty("previewPanel.button.edit"),
                     e -> MenuItemActions.FileActions.edit(frame)
-            );
-            panel.addBottomButton(
-                    this,
+            ));
+            rightBottomPanel.add(panel.getBottomButton(
                     frame.getLanguage().getProperty("previewPanel.button.test"),
                     e -> new PreviewTestDialog("PreviewPanel.testDialog", frame, panel, "Choose Test Type").open()
-            );
+            ));
+            add(rightBottomPanel, BorderLayout.EAST);
         }
     }
 
     @Override
     JPanel getBottomPanel() {
-        return new BottomPanel(frame, this);
+        return new BottomPanel(this);
     }
 
 }

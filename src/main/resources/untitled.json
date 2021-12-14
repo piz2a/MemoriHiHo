@@ -12,5 +12,6 @@
     ["ghijk", "hijkl"],
     ["hijkl", "ijklm"],
     ["ijklm", "jklmn"]
-  ]
+  ],
+  "shuffle": true
 }

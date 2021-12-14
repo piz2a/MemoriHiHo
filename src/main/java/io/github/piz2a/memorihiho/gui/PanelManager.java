@@ -16,10 +16,11 @@ public class PanelManager extends JPanel {
     private String currentPanelName;
     private MHPanel currentPanel = null;
 
-    public final static String PREVIEW_PANEL = "Preview";
-    public final static String EDIT_PANEL = "Edit";
-    public final static String NORMAL_TEST_PANEL = "Normal Test";
-    public final static String QUICK_TEST_PANEL = "Quick Test";
+    public static final String PREVIEW_PANEL = "Preview";
+    public static final String EDIT_PANEL = "Edit";
+    public static final String NORMAL_TEST_PANEL = "Normal Test";
+    public static final String QUICK_TEST_PANEL = "Quick Test";
+    public static final String TEST_COMPLETE_PANEL = "Test Complete";
 
     public PanelManager(MemoriHiHo frame) {
         this.frame = frame;
@@ -33,6 +34,7 @@ public class PanelManager extends JPanel {
         panelHashMap.put(EDIT_PANEL, new EditPanel(frame));
         panelHashMap.put(NORMAL_TEST_PANEL, new NormalTestPanel(frame));
         panelHashMap.put(QUICK_TEST_PANEL, new QuickTestPanel(frame));
+        panelHashMap.put(TEST_COMPLETE_PANEL, new TestCompletePanel(frame));
 
         for (String key : panelHashMap.keySet()) {
             add(panelHashMap.get(key), key);
@@ -45,6 +47,10 @@ public class PanelManager extends JPanel {
 
     public JPanel getCurrentPanel() {
         return currentPanel;
+    }
+
+    public JPanel getPanelByName(String key) {
+        return panelHashMap.get(key);
     }
 
     public void setPanel(String panelName) {
