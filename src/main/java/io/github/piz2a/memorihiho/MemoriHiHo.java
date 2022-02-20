@@ -25,7 +25,7 @@ public class MemoriHiHo extends JFrame {
 
     public final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
 
-    public final HashMap<String, MHDialog> isDialogOpen = new HashMap<>();
+    public final HashMap<String, MHDialog> dialogsOpened = new HashMap<>();
     private final TextFileReader textFileReader = new TextFileReader();
     private PanelManager panelManager;
     private File file;

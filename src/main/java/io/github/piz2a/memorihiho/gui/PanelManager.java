@@ -18,8 +18,10 @@ public class PanelManager extends JPanel {
 
     public static final String PREVIEW_PANEL = "Preview";
     public static final String EDIT_PANEL = "Edit";
-    public static final String NORMAL_TEST_PANEL = "Normal Test";
-    public static final String QUICK_TEST_PANEL = "Quick Test";
+    public static final String SUBJECTIVE_TEST_PANEL = "Subjective Test";
+    public static final String MULTIPLE_CHOICE_TEST_PANEL = "Multiple Choice Test";
+    public static final String REVERSED_SUBJECTIVE_TEST_PANEL = "Reversed Subjective Test";
+    public static final String REVERSED_MULTIPLE_CHOICE_TEST_PANEL = "Reversed Multiple Choice Test";
     public static final String TEST_COMPLETE_PANEL = "Test Complete";
 
     public PanelManager(MemoriHiHo frame) {
@@ -32,8 +34,10 @@ public class PanelManager extends JPanel {
     private void addPanels() {
         panelHashMap.put(PREVIEW_PANEL, new PreviewPanel(frame));
         panelHashMap.put(EDIT_PANEL, new EditPanel(frame));
-        panelHashMap.put(NORMAL_TEST_PANEL, new NormalTestPanel(frame));
-        panelHashMap.put(QUICK_TEST_PANEL, new QuickTestPanel(frame));
+        panelHashMap.put(SUBJECTIVE_TEST_PANEL, new SubjectiveTestPanel(frame));
+        panelHashMap.put(MULTIPLE_CHOICE_TEST_PANEL, new MultipleChoiceTestPanel(frame));
+        panelHashMap.put(REVERSED_SUBJECTIVE_TEST_PANEL, new ReversedSubjectiveTestPanel(frame));
+        panelHashMap.put(REVERSED_MULTIPLE_CHOICE_TEST_PANEL, new ReversedMultipleChoiceTestPanel(frame));
         panelHashMap.put(TEST_COMPLETE_PANEL, new TestCompletePanel(frame));
 
         for (String key : panelHashMap.keySet()) {

@@ -18,46 +18,81 @@ public class PreviewTestDialog extends MHDialog {
 
     @Override
     public void decorate() {
-        final int width = 200, height = 80, fontSize = 16;
+        final int width = 240, height = 160, fontSize = 16;
 
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout()/*new BoxLayout(getContentPane(), BoxLayout.Y_AXIS)*/);
         setSize(width, height);
 
-        URL normalIconResource = frame.classloader.getResource("icons/menubar/normal_test.png");
-        URL quickIconResource = frame.classloader.getResource("icons/menubar/quick_test.png");
+        URL subjectiveIconResource = frame.classloader.getResource("icons/menubar/subjective_test.png");
+        URL multipleChoiceIconResource = frame.classloader.getResource("icons/menubar/multiple_choice_test.png");
+        URL reversedSubjectiveIconResource = frame.classloader.getResource("icons/menubar/reversed_subjective_test.png");
+        URL reversedMultipleChoiceIconResource = frame.classloader.getResource("icons/menubar/reversed_multiple_choice_test.png");
         try {
-            assert normalIconResource != null && quickIconResource != null;
+            assert subjectiveIconResource != null && multipleChoiceIconResource != null
+                    && reversedSubjectiveIconResource != null && reversedMultipleChoiceIconResource != null;
         } catch (AssertionError e) {
             e.printStackTrace();
         }
 
-        // Normal Test Button
-        add(InstantButton.getButton(
+        JPanel upperPanel = new JPanel();
+        upperPanel.setLayout(new BorderLayout());
+        // Subjective Test Button
+        upperPanel.add(InstantButton.getButton(
                 frame,
-                frame.getLanguage().getProperty("menuBarItem.normal_test"),
-                new ImageIcon(normalIconResource),
+                frame.getLanguage().getProperty("menuBarItem.subjective_test"),
+                new ImageIcon(subjectiveIconResource),
                 e -> {
                     this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));  // Close
-                    MenuItemActions.TestActions.normalTest(frame);
+                    MenuItemActions.TestActions.subjectiveTest(frame);
                 },
-                new Dimension(width, height / 2),
+                new Dimension(width, height / 4),
                 fontSize
         ), BorderLayout.NORTH);
-        // Quick Test Button
-        add(InstantButton.getButton(
+        // Multiple Choice Test Button
+        upperPanel.add(InstantButton.getButton(
                 frame,
-                frame.getLanguage().getProperty("menuBarItem.quick_test"),
-                new ImageIcon(quickIconResource),
+                frame.getLanguage().getProperty("menuBarItem.multiple_choice_test"),
+                new ImageIcon(multipleChoiceIconResource),
                 e -> {
                     this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));  // Close
-                    MenuItemActions.TestActions.quickTest(frame);
+                    MenuItemActions.TestActions.multipleChoiceTest(frame);
                 },
-                new Dimension(width, height / 2),
+                new Dimension(width, height / 4),
                 fontSize
         ), BorderLayout.SOUTH);
+        add(upperPanel, BorderLayout.NORTH);
+
+        JPanel lowerPanel = new JPanel();
+        lowerPanel.setLayout(new BorderLayout());
+        // Reversed Subjective Test Button
+        lowerPanel.add(InstantButton.getButton(
+                frame,
+                frame.getLanguage().getProperty("menuBarItem.reversed_subjective_test"),
+                new ImageIcon(reversedSubjectiveIconResource),
+                e -> {
+                    this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));  // Close
+                    MenuItemActions.TestActions.reversedSubjectiveTest(frame);
+                },
+                new Dimension(width, height / 4),
+                fontSize
+        ), BorderLayout.NORTH);
+        // Reversed Multiple Choice Test Button
+        lowerPanel.add(InstantButton.getButton(
+                frame,
+                frame.getLanguage().getProperty("menuBarItem.reversed_multiple_choice_test"),
+                new ImageIcon(reversedMultipleChoiceIconResource),
+                e -> {
+                    this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));  // Close
+                    MenuItemActions.TestActions.reversedMultipleChoiceTest(frame);
+                },
+                new Dimension(width, height / 4),
+                fontSize
+        ), BorderLayout.SOUTH);
+        add(lowerPanel, BorderLayout.SOUTH);
+
         setLocation(
                 (frame.getScreenWidth() - width) / 2,
-                (frame.getScreenHeight() - height / 2) / 2
+                (frame.getScreenHeight() - height) / 2
         );
     }
 

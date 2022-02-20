@@ -1,4 +1,16 @@
 #Default Settings
 #Thu Jul 29 16:19:46 KST 2021
+version=${project.version}
 lang=korean
 extension=mhd
+multipleChoiceTest.numberOfChoices=4
+guide.panel.preview=false
+guide.panel.edit=false
+guide.test.normal=false
+guide.test.quick=false
+showRecentFiles=true
+recentFiles.1=
+recentFiles.2=
+recentFiles.3=
+recentFiles.4=
+recentFiles.5=

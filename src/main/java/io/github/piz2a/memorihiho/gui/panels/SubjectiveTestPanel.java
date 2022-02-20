@@ -8,24 +8,26 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-public class NormalTestPanel extends TestPanel {
+public class SubjectiveTestPanel extends TestPanel {
 
-    public NormalTestPanel(MemoriHiHo frame) {
+    public SubjectiveTestPanel(MemoriHiHo frame) {
         super(frame);
     }
 
     @Override
     String getTestType() {
-        return "Normal Test";
+        return frame.getLanguage().getProperty("menuBarItem.subjective_test");
     }
 
-    class CenterPanel extends DefaultCenterPanel {
+    class QuestionAnswerPanel extends DefaultCenterPanel {
+
         QuestionNumberPanel questionNumberPanel = new QuestionNumberPanel();
         QuestionPanel questionPanel = new QuestionPanel();
         AnswerPanel answerPanel = new AnswerPanel();
         JSONArray currentElement;
 
-        CenterPanel(MemoriHiHo frame) {
+        QuestionAnswerPanel(boolean reversed) {
+            if (reversed) reverseElement(elements);
             setLayout(new BorderLayout(20, 30));
             setBorder(new EmptyBorder(20, 20, 20, 20));
             add(questionNumberPanel, BorderLayout.NORTH);
@@ -60,26 +62,6 @@ public class NormalTestPanel extends TestPanel {
             }
         }
 
-        class AnswerPanel extends JPanel {  // Includes answer and ratio
-            JLabel answerLabel, ratioLabel;
-            AnswerPanel() {
-                setLayout(new BorderLayout(0, 5));
-                setPreferredSize(new Dimension(200, 96));
-                answerLabel = new JLabel();
-                answerLabel.setFont(new Font(frame.getLanguage().getProperty("font"), Font.PLAIN, 24));
-                answerLabel.setForeground(new Color(0xC00000));
-                answerLabel.setHorizontalAlignment(JLabel.CENTER);
-                answerLabel.setPreferredSize(new Dimension(100, 60));
-                add(answerLabel, BorderLayout.NORTH);
-                ratioLabel = new JLabel();
-                ratioLabel.setFont(new Font(frame.getLanguage().getProperty("font"), Font.PLAIN, 24));
-                ratioLabel.setForeground(new Color(0x00C000));
-                ratioLabel.setHorizontalAlignment(JLabel.CENTER);
-                answerLabel.setPreferredSize(new Dimension(100, 60));
-                add(ratioLabel, BorderLayout.SOUTH);
-            }
-        }
-
         @Override
         public void raise() {
             currentElement = (JSONArray) elements.get(index);
@@ -111,7 +93,7 @@ public class NormalTestPanel extends TestPanel {
 
     @Override
     JPanel getCenterPanel() {
-        return new CenterPanel(frame);
+        return new QuestionAnswerPanel(false);
     }
 
 }

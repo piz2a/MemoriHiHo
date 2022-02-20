@@ -24,7 +24,7 @@ public abstract class MHDialog extends JDialog {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                frame.isDialogOpen.put(dialogName, null);
+                frame.dialogsOpened.put(dialogName, null);
             }
         });
 
@@ -38,16 +38,16 @@ public abstract class MHDialog extends JDialog {
 
     public void open() {
         // 중복 open 방지
-        if (!frame.isDialogOpen.containsKey(dialogName))
-            frame.isDialogOpen.put(dialogName, null);
-        if (frame.isDialogOpen.get(dialogName) == null) {
+        if (!frame.dialogsOpened.containsKey(dialogName))
+            frame.dialogsOpened.put(dialogName, null);
+        if (frame.dialogsOpened.get(dialogName) == null) {
             // 새로 Dialog 열기
-            frame.isDialogOpen.put(dialogName, this);
+            frame.dialogsOpened.put(dialogName, this);
             initialize();
         } else {
             // 이미 열려있는 Dialog에 focus
-            frame.isDialogOpen.get(dialogName).toFront();
-            frame.isDialogOpen.get(dialogName).requestFocus();
+            frame.dialogsOpened.get(dialogName).toFront();
+            frame.dialogsOpened.get(dialogName).requestFocus();
         }
     }
 

@@ -4,9 +4,9 @@ import org.json.simple.JSONArray;
 
 import java.util.Random;
 
-public class JsonArrayShuffler {
+public class ArrayShuffler {
 
-    public static JSONArray shuffle(JSONArray array) {
+    public static JSONArray shuffleJSON(JSONArray array) {
         // Fisher–Yates shuffle
         JSONArray newArray = (JSONArray) array.clone();
         Random random = new Random();
@@ -19,4 +19,5 @@ public class JsonArrayShuffler {
         }
         return newArray;
     }
+
 }

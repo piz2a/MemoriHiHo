@@ -1,18 +1,21 @@
 package io.github.piz2a.memorihiho;
 
 import io.github.piz2a.memorihiho.gui.PanelManager;
+import io.github.piz2a.memorihiho.gui.dialogs.AboutDialog;
 import io.github.piz2a.memorihiho.gui.panels.EditPanel;
-import io.github.piz2a.memorihiho.utils.TextFileReader;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.Desktop;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class MenuItemActions {
 
@@ -190,14 +193,24 @@ public class MenuItemActions {
 
     public static class TestActions {
 
-        public static void normalTest(MemoriHiHo frame) {
-            System.out.println("NormalTest");
-            frame.getPanelManager().setPanel(PanelManager.NORMAL_TEST_PANEL);
+        public static void subjectiveTest(MemoriHiHo frame) {
+            System.out.println("SubjectiveTest");
+            frame.getPanelManager().setPanel(PanelManager.SUBJECTIVE_TEST_PANEL);
         }
 
-        public static void quickTest(MemoriHiHo frame) {
-            System.out.println("QuickTest");
-            frame.getPanelManager().setPanel(PanelManager.QUICK_TEST_PANEL);
+        public static void multipleChoiceTest(MemoriHiHo frame) {
+            System.out.println("MultipleChoiceTest");
+            frame.getPanelManager().setPanel(PanelManager.MULTIPLE_CHOICE_TEST_PANEL);
+        }
+
+        public static void reversedSubjectiveTest(MemoriHiHo frame) {
+            System.out.println("ReversedSubjectiveTest");
+            frame.getPanelManager().setPanel(PanelManager.REVERSED_SUBJECTIVE_TEST_PANEL);
+        }
+
+        public static void reversedMultipleChoiceTest(MemoriHiHo frame) {
+            System.out.println("ReversedMultipleChoiceTest");
+            frame.getPanelManager().setPanel(PanelManager.REVERSED_MULTIPLE_CHOICE_TEST_PANEL);
         }
 
     }
@@ -206,10 +219,18 @@ public class MenuItemActions {
 
         public static void manual(MemoriHiHo frame) {
             System.out.println("Manual");
+            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                try {
+                    Desktop.getDesktop().browse(new URI("http://piz2a.github.io/MemoriHiHo"));
+                } catch (URISyntaxException | IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         public static void about(MemoriHiHo frame) {
             System.out.println("About");
+            new AboutDialog(frame).open();
         }
 
     }

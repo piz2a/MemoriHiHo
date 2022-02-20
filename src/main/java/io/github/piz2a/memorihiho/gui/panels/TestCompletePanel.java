@@ -20,8 +20,8 @@ public class TestCompletePanel extends MHPanel {
         this.score = score;
     }
 
-    class InfoPanel extends JPanel {
-        InfoPanel() {
+    class TopPanel extends JPanel {
+        TopPanel() {
             setLayout(new FlowLayout(FlowLayout.LEFT, 10, 5));
 
             JLabel testTypeLabel = new JLabel(frame.getLanguage().getProperty("testCompletePanel.complete"));
@@ -36,7 +36,7 @@ public class TestCompletePanel extends MHPanel {
 
     @Override
     JPanel getTopPanel() {
-        return new InfoPanel();
+        return new TopPanel();
     }
 
     class CenterPanel extends JPanel {

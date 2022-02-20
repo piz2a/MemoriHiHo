@@ -2,7 +2,7 @@ package io.github.piz2a.memorihiho.gui.panels;
 
 import io.github.piz2a.memorihiho.MemoriHiHo;
 import io.github.piz2a.memorihiho.gui.PanelManager;
-import io.github.piz2a.memorihiho.utils.JsonArrayShuffler;
+import io.github.piz2a.memorihiho.utils.ArrayShuffler;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -14,7 +14,7 @@ public abstract class TestPanel extends MHPanel {
 
     // TestPanel은 크게 raise(문제를 냄)와 check(채점)으로 동작한다.
 
-    public int maximumScore = 100;
+    public final int maximumScore = 100;
 
     JSONObject fileObject;
     JSONArray elements;
@@ -35,7 +35,7 @@ public abstract class TestPanel extends MHPanel {
         elements = (JSONArray) fileObject.get("elements");
         testLength = elements.size();
         if ((boolean) fileObject.get("shuffle")) {  // Shuffle elements
-            elements = JsonArrayShuffler.shuffle(elements);
+            elements = ArrayShuffler.shuffleJSON(elements);
         }
         super.initialize();
         raise();
@@ -66,11 +66,50 @@ public abstract class TestPanel extends MHPanel {
         return new TopPanel();
     }
 
-    abstract static class DefaultCenterPanel extends JPanel {
+    abstract class DefaultCenterPanel extends JPanel {
         abstract void raise(); // 문제 준비
         abstract void check(); // 문제 입력 차단 & 점수 보여주기
         abstract double ratio(); // out of 1
         abstract double score(); // score which needs to be added
+
+        class QuestionNumberPanel extends JPanel {
+            JLabel questionNumberLabel;
+            QuestionNumberPanel() {
+                setLayout(new FlowLayout(FlowLayout.LEFT));
+                questionNumberLabel = new JLabel("Question");
+                questionNumberLabel.setFont(new Font(frame.getLanguage().getProperty("font"), Font.PLAIN, 40));
+                add(questionNumberLabel);
+            }
+        }
+
+        class AnswerPanel extends JPanel {  // Includes answer and ratio
+            JLabel answerLabel, ratioLabel;
+            AnswerPanel() {
+                setLayout(new BorderLayout(0, 5));
+                setPreferredSize(new Dimension(200, 96));
+                answerLabel = new JLabel();
+                answerLabel.setFont(new Font(frame.getLanguage().getProperty("font"), Font.PLAIN, 24));
+                answerLabel.setForeground(new Color(0xC00000));
+                answerLabel.setHorizontalAlignment(JLabel.CENTER);
+                answerLabel.setPreferredSize(new Dimension(100, 60));
+                add(answerLabel, BorderLayout.NORTH);
+                ratioLabel = new JLabel();
+                ratioLabel.setFont(new Font(frame.getLanguage().getProperty("font"), Font.PLAIN, 24));
+                ratioLabel.setForeground(new Color(0x00C000));
+                ratioLabel.setHorizontalAlignment(JLabel.CENTER);
+                answerLabel.setPreferredSize(new Dimension(100, 60));
+                add(ratioLabel, BorderLayout.SOUTH);
+            }
+        }
+
+        void reverseElement(JSONArray elements) {
+            for (Object object : elements) {
+                JSONArray element = (JSONArray) object;
+                Object data0 = element.get(0);  // swap
+                element.set(0, element.get(1));
+                element.set(1, data0);
+            }
+        }
     }
 
     @Override

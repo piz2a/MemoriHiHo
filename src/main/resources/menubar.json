@@ -12,7 +12,7 @@
   {
     "menuName": "test",
     "items": [
-      ["normal_test", "quick_test"]
+      ["subjective_test", "multiple_choice_test", "reversed_subjective_test", "reversed_multiple_choice_test"]
     ]
   },
   {

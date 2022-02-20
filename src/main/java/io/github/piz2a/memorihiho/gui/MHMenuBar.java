@@ -4,7 +4,6 @@ import javax.swing.*;
 
 import io.github.piz2a.memorihiho.MemoriHiHo;
 import io.github.piz2a.memorihiho.MenuItemActions;
-import io.github.piz2a.memorihiho.utils.TextFileReader;
 import org.json.simple.*;
 import org.json.simple.parser.*;
 
@@ -133,11 +132,17 @@ public class MHMenuBar {
             case "exit":
                 listener = e -> MenuItemActions.FileActions.exit(frame);
                 break;
-            case "normal_test":
-                listener = e -> MenuItemActions.TestActions.normalTest(frame);
+            case "subjective_test":
+                listener = e -> MenuItemActions.TestActions.subjectiveTest(frame);
                 break;
-            case "quick_test":
-                listener = e -> MenuItemActions.TestActions.quickTest(frame);
+            case "multiple_choice_test":
+                listener = e -> MenuItemActions.TestActions.multipleChoiceTest(frame);
+                break;
+            case "reversed_subjective_test":
+                listener = e -> MenuItemActions.TestActions.reversedSubjectiveTest(frame);
+                break;
+            case "reversed_multiple_choice_test":
+                listener = e -> MenuItemActions.TestActions.reversedMultipleChoiceTest(frame);
                 break;
             case "manual":
                 listener = e -> MenuItemActions.HelpActions.manual(frame);
