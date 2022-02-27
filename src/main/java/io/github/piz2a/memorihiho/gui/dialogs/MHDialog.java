@@ -51,4 +51,8 @@ public abstract class MHDialog extends JDialog {
         }
     }
 
+    public void close() {
+        this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+    }
+
 }

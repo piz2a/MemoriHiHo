@@ -7,7 +7,6 @@ import io.github.piz2a.memorihiho.utils.InstantButton;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowEvent;
 import java.net.URL;
 
 public class PreviewTestDialog extends MHDialog {
@@ -18,7 +17,7 @@ public class PreviewTestDialog extends MHDialog {
 
     @Override
     public void decorate() {
-        final int width = 240, height = 160, fontSize = 16;
+        final int width = 280, height = 160, fontSize = 16;
 
         setLayout(new BorderLayout()/*new BoxLayout(getContentPane(), BoxLayout.Y_AXIS)*/);
         setSize(width, height);
@@ -42,7 +41,7 @@ public class PreviewTestDialog extends MHDialog {
                 frame.getLanguage().getProperty("menuBarItem.subjective_test"),
                 new ImageIcon(subjectiveIconResource),
                 e -> {
-                    this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));  // Close
+                    close();
                     MenuItemActions.TestActions.subjectiveTest(frame);
                 },
                 new Dimension(width, height / 4),
@@ -54,7 +53,7 @@ public class PreviewTestDialog extends MHDialog {
                 frame.getLanguage().getProperty("menuBarItem.multiple_choice_test"),
                 new ImageIcon(multipleChoiceIconResource),
                 e -> {
-                    this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));  // Close
+                    close();
                     MenuItemActions.TestActions.multipleChoiceTest(frame);
                 },
                 new Dimension(width, height / 4),
@@ -70,7 +69,7 @@ public class PreviewTestDialog extends MHDialog {
                 frame.getLanguage().getProperty("menuBarItem.reversed_subjective_test"),
                 new ImageIcon(reversedSubjectiveIconResource),
                 e -> {
-                    this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));  // Close
+                    close();
                     MenuItemActions.TestActions.reversedSubjectiveTest(frame);
                 },
                 new Dimension(width, height / 4),
@@ -82,7 +81,7 @@ public class PreviewTestDialog extends MHDialog {
                 frame.getLanguage().getProperty("menuBarItem.reversed_multiple_choice_test"),
                 new ImageIcon(reversedMultipleChoiceIconResource),
                 e -> {
-                    this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));  // Close
+                    close();
                     MenuItemActions.TestActions.reversedMultipleChoiceTest(frame);
                 },
                 new Dimension(width, height / 4),

@@ -21,6 +21,7 @@ public class MemoriHiHo extends JFrame {
     public final String title = "MemoriHiHo by piz2a";
     public final int width = 800, height = 600;
     public final String settingsFilePath = "settings.txt";
+    public final String defaultVariablesPath = "defaultvariables.properties";
     private int screenWidth, screenHeight;
 
     public final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
@@ -31,6 +32,7 @@ public class MemoriHiHo extends JFrame {
     private File file;
     private JSONObject currentFileObject = null;
     private Properties settings;
+    private Properties defaultVariables;
     private Properties language;
     private boolean isNewFileBoolean;
     private boolean haveChangesBoolean;
@@ -84,13 +86,24 @@ public class MemoriHiHo extends JFrame {
             System.exit(1);
         }
 
+        // User Settings
+        defaultVariables = new Properties();
+        InputStream defaultVariablesInputStream = classloader.getResourceAsStream(defaultVariablesPath);
+        try {
+            defaultVariables.load(defaultVariablesInputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+            ErrorDialog.show(e);
+            System.exit(1);
+        }
+
         // Language
         language = new Properties();
 
-        InputStream inputStream = classloader.getResourceAsStream(
+        InputStream languageInputStream = classloader.getResourceAsStream(
                 String.format("lang/%s.properties", settings.getProperty("lang"))
         );
-        if (inputStream == null) {
+        if (languageInputStream == null) {
             JOptionPane.showMessageDialog(
                     this,
                     String.format("No language named \"%s\"", settings.getProperty("lang")),
@@ -101,7 +114,7 @@ public class MemoriHiHo extends JFrame {
         }
 
         try {
-            language.load(inputStream);
+            language.load(languageInputStream);
         } catch (IOException e) {
             e.printStackTrace();
             ErrorDialog.show(e);
@@ -149,7 +162,7 @@ public class MemoriHiHo extends JFrame {
 
     private void addListeners() {
         addWindowListener(new MHWindowListener(this));
-        addKeyListener(new MHKeyListener(this));
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new MHKeyDispatcher(this));
         new DropTarget(this, new DragDropListener(this));
     }
 
@@ -167,6 +180,14 @@ public class MemoriHiHo extends JFrame {
         repaint();
     }
 
+    public void saveSettings() {
+        try {
+            settings.store(new FileOutputStream(settingsFilePath), null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     // Set values
     public void setFile(File file) {
         this.file = file;
@@ -174,14 +195,6 @@ public class MemoriHiHo extends JFrame {
 
     public void setCurrentFileObject(JSONObject fileObject) {
         this.currentFileObject = fileObject;
-    }
-
-    public void setSettings(Properties properties) {
-        this.settings = properties;
-    }
-
-    public void setLanguage(Properties properties) {
-        this.language = properties;
     }
 
     public void setIsNewFile(boolean b) {
@@ -219,6 +232,10 @@ public class MemoriHiHo extends JFrame {
 
     public Properties getSettings() {
         return settings;
+    }
+
+    public Properties getDefaultVariables() {
+        return defaultVariables;
     }
 
     public Properties getLanguage() {

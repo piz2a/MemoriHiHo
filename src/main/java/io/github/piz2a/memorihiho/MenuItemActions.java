@@ -2,6 +2,7 @@ package io.github.piz2a.memorihiho;
 
 import io.github.piz2a.memorihiho.gui.PanelManager;
 import io.github.piz2a.memorihiho.gui.dialogs.AboutDialog;
+import io.github.piz2a.memorihiho.gui.dialogs.SettingsDialog;
 import io.github.piz2a.memorihiho.gui.panels.EditPanel;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -27,7 +28,9 @@ public class MenuItemActions {
                 System.out.println("NewFile cancelled");
                 return;
             }
-            String jsonData = frame.getTextFileReader().getStringFromResources("untitled.json");
+            String jsonData = frame.getTextFileReader().getStringFromResources(
+                    String.format("untitled_%s.json", frame.getSettings().getProperty("lang"))
+            );
             openFile(frame, jsonData, null, true);
         }
 
@@ -35,7 +38,7 @@ public class MenuItemActions {
             System.out.println("Open");
 
             final JFileChooser fc = new JFileChooser();
-            String extension = frame.getSettings().getProperty("extension");
+            String extension = frame.getDefaultVariables().getProperty("extension");
             FileNameExtensionFilter filter = new FileNameExtensionFilter(
                     String.format("%s (.%s)", frame.getLanguage().getProperty("extension.description"), extension), extension
             );
@@ -90,8 +93,9 @@ public class MenuItemActions {
             frame.getPanelManager().setPanel(PanelManager.EDIT_PANEL);
         }
 
-        public static void settings() {
+        public static void settings(MemoriHiHo frame) {
             System.out.println("Settings");
+            new SettingsDialog(frame).open();
         }
 
         public static boolean save(MemoriHiHo frame) {
@@ -221,7 +225,7 @@ public class MenuItemActions {
             System.out.println("Manual");
             if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
                 try {
-                    Desktop.getDesktop().browse(new URI("http://piz2a.github.io/MemoriHiHo"));
+                    Desktop.getDesktop().browse(new URI(frame.getDefaultVariables().getProperty("githubPages")));
                 } catch (URISyntaxException | IOException e) {
                     e.printStackTrace();
                 }

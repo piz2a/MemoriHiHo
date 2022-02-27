@@ -1,0 +1,17 @@
+{
+  "title": "Untitled",
+  "author": "Unknown",
+  "description": "Description here",
+  "elements": [
+    ["the 1st planet of the solar system", "Mercury"],
+    ["the 2nd planet of the solar system", "Venus"],
+    ["the 3rd planet of the solar system", "Earth"],
+    ["the 4th planet of the solar system", "Mars"],
+    ["the 5th planet of the solar system", "Jupiter"],
+    ["the 6th planet of the solar system", "Saturn"],
+    ["the 7th planet of the solar system", "Uranus"],
+    ["the 8th planet of the solar system", "Neptune"],
+    ["the 9th planet of the solar system", "Pizza Planet"]
+  ],
+  "shuffle": true
+}

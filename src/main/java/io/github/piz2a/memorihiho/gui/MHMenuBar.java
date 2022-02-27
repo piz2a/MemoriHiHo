@@ -121,7 +121,7 @@ public class MHMenuBar {
                 listener = e -> MenuItemActions.FileActions.edit(frame);
                 break;
             case "settings":
-                listener = e -> MenuItemActions.FileActions.settings();
+                listener = e -> MenuItemActions.FileActions.settings(frame);
                 break;
             case "save":
                 listener = e -> MenuItemActions.FileActions.save(frame);
