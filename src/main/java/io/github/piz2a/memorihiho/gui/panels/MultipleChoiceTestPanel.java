@@ -2,12 +2,12 @@ package io.github.piz2a.memorihiho.gui.panels;
 
 import io.github.piz2a.memorihiho.MemoriHiHo;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 
@@ -24,6 +24,7 @@ public class MultipleChoiceTestPanel extends TestPanel {
 
     class QuestionAnswerPanel extends DefaultCenterPanel {
 
+        int numberOfChoices = ((Long) fileObject.get("numberOfChoices")).intValue();
         QuestionNumberPanel questionNumberPanel = new QuestionNumberPanel();
         QuestionPanel questionPanel = new QuestionPanel();
         OptionPanel optionPanel = new OptionPanel();
@@ -31,9 +32,9 @@ public class MultipleChoiceTestPanel extends TestPanel {
         AnswerPanel answerPanel = new AnswerPanel();
         ArrayList<QuestionAndOptions> questionsAndOptionsArray;
         QuestionAndOptions currentElement;
-        final int numberOfChoices = 4; //Integer.parseInt(frame.getSettings().getProperty("multipleChoiceTest.numberOfChoices"));
 
         QuestionAnswerPanel(boolean reversed) {
+            // System.out.println("numberOfChoices: " + numberOfChoices);
             if (reversed) reverseElement(elements);
             questionsAndOptionsArray = makeOptions(elements, numberOfChoices);
             setLayout(new BorderLayout(20, 10));

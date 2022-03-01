@@ -6,5 +6,6 @@
     ["hello", "world"],
     ["pizza", "yummy"]
   ],
-  "shuffle": true
+  "shuffle": true,
+  "numberOfChoices": 2
 }

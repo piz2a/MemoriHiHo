@@ -1,15 +1,2 @@
-#Mon Feb 28 01:47:31 KST 2022
-guide.test.normal=false
-multipleChoiceTest.numberOfChoices=4
+#Wed Mar 02 08:24:30 KST 2022
 lang=korean
-guide.panel.edit=false
-guide.test.quick=false
-recentFiles.5=
-recentFiles.4=
-recentFiles.3=
-guide.panel.preview=false
-showRecentFiles=true
-recentFiles.2=
-recentFiles.1=
-version=${project.version}
-extension=mhd

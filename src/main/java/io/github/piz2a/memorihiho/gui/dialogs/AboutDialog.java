@@ -24,6 +24,8 @@ public class AboutDialog extends MHDialog {
 
             add(new JLabel("MemoriHiHo by piz2a"));
 
+            add(new JLabel(String.format("Version: %s", frame.getDefaultVariables().getProperty("version"))));
+
             JButton githubButton = new JButton("Github");
             githubButton.addActionListener(event -> {
                 if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {

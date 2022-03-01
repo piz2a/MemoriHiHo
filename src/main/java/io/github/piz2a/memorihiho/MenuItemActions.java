@@ -12,11 +12,10 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.Desktop;
 import java.awt.event.WindowEvent;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 
 public class MenuItemActions {
 
@@ -49,17 +48,20 @@ public class MenuItemActions {
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 java.io.File file = fc.getSelectedFile();
                 System.out.println("Opening " + file.getName());
-                String jsonData = frame.getTextFileReader().getString(file.toURI());
 
                 if (!confirmWhenClosing(frame)) {
                     System.out.println("Opening cancelled");
                     return;
                 }
 
-                openFile(frame, jsonData, file,false);
+                openFile(frame, file);
             } else {
                 System.out.println("Opening cancelled");
             }
+        }
+
+        public static void openFile(MemoriHiHo frame, java.io.File file) {
+            openFile(frame, frame.getTextFileReader().getString(file.toURI()), file, false);
         }
 
         public static void openFile(MemoriHiHo frame, String jsonData, java.io.File file, boolean isNewFile) {
@@ -84,9 +86,10 @@ public class MenuItemActions {
             }
         }
 
-        public static void recentFiles() {
-            System.out.println("RecentFiles");
-        }
+        /*public static void recentFiles(MemoriHiHo frame) {
+            int numberOfRecentFiles = Integer.parseInt(frame.getDefaultVariables().getProperty("numberOfRecentFiles"));
+            //for (int i = 1; i < numberOfRecentFiles)
+        }*/
 
         public static void edit(MemoriHiHo frame) {
             System.out.println("Edit");
@@ -108,7 +111,7 @@ public class MenuItemActions {
         public static boolean saveAs(MemoriHiHo frame) {
             System.out.println("SaveAs");
             final JFileChooser fc = new JFileChooser();
-            String extension = frame.getSettings().getProperty("extension");
+            String extension = frame.getDefaultVariables().getProperty("extension");
             FileNameExtensionFilter filter = new FileNameExtensionFilter(
                     String.format("%s (.%s)", frame.getLanguage().getProperty("extension.description"), extension), extension
             );
@@ -131,7 +134,7 @@ public class MenuItemActions {
         }
 
         private static boolean saveFile(MemoriHiHo frame, File file) {
-            try (FileWriter fileWriter = new FileWriter(file)) {
+            try (BufferedWriter fileWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))) {
                 System.out.println("Saving " + file.getName());
                 fileWriter.write(frame.getCurrentFileObject().toJSONString());
                 fileWriter.flush();

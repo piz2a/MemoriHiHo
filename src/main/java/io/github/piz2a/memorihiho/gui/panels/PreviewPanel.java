@@ -88,12 +88,15 @@ public class PreviewPanel extends MHPanel {
             JPanel leftBottomPanel = new JPanel();
             setLayout(new BorderLayout());
 
-            leftBottomPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
+            leftBottomPanel.setLayout(new BorderLayout());
             JLabel shuffleLabel = new JLabel(frame.getLanguage().getProperty(
                     (boolean) frame.getCurrentFileObject().get("shuffle") ? "previewPanel.label.shuffle" : "previewPanel.label.notShuffle"
             ));
             shuffleLabel.setFont(new Font(frame.getLanguage().getProperty("font"), Font.PLAIN, 12));
-            leftBottomPanel.add(shuffleLabel);
+            leftBottomPanel.add(shuffleLabel, BorderLayout.NORTH);
+            JLabel numberOfChoicesLabel = new JLabel(String.format("%s: %d", frame.getLanguage().getProperty("previewPanel.label.numberOfChoices"), frame.getCurrentFileObject().get("numberOfChoices")));
+            numberOfChoicesLabel.setFont(new Font(frame.getLanguage().getProperty("font"), Font.PLAIN, 12));
+            leftBottomPanel.add(numberOfChoicesLabel);
             add(leftBottomPanel, BorderLayout.WEST);
 
             JPanel rightBottomPanel = new JPanel();

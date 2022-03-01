@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,8 +18,8 @@ public class TextFileReader {
     public String getString(URI uri) {
         try {
             /*
-             * (When in jar) jar:file:/C:/Users/jiho/Code/Java/MemoriHiHo/target/MemoriHiHo-0.1-SNAPSHOT-jar-with-dependencies.jar!/menubar.json
-             * (When not in jar) file:/C:/Users/jiho/Code/Java/MemoriHiHo/target/classes/menubar.json
+             * (When in jar) jar:file:/C:/Users/jiho/Code/Java/MemoriHiHo/target/MemoriHiHo-0.1-SNAPSHOT-jar-with-dependencies.jar!/lang/availablelanguages.json
+             * (When not in jar) file:/C:/Users/jiho/Code/Java/MemoriHiHo/target/classes/lang/availablelanguages.json
              */
             System.out.println(uri);
             final Path path;
@@ -31,7 +32,7 @@ public class TextFileReader {
             } else {  // not jar
                 path = Paths.get(uri);
             }
-            return new String(Files.readAllBytes(path));
+            return new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
             ErrorDialog.show(e);

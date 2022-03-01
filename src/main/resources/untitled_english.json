@@ -13,5 +13,6 @@
     ["the 8th planet of the solar system", "Neptune"],
     ["the 9th planet of the solar system", "Pizza Planet"]
   ],
-  "shuffle": true
+  "shuffle": true,
+  "numberOfChoices": 4
 }

@@ -13,6 +13,7 @@ import java.awt.*;
 import java.awt.dnd.DropTarget;
 import java.io.*;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -78,7 +79,7 @@ public class MemoriHiHo extends JFrame {
         // Settings
         settings = new Properties();
         try {
-            FileReader fileReader = new FileReader(settingsFilePath);
+            BufferedReader fileReader = new BufferedReader(new InputStreamReader(new FileInputStream(settingsFilePath), StandardCharsets.UTF_8));
             settings.load(fileReader);
         } catch (IOException e) {
             e.printStackTrace();
@@ -152,7 +153,7 @@ public class MemoriHiHo extends JFrame {
 
     private void createGUI() {
         // Menu bar
-        JMenuBar menuBar = new MHMenuBar(this).getMenuBar();
+        JMenuBar menuBar = new MHMenuBar(this);
         setJMenuBar(menuBar);
 
         // Content Pane Manager

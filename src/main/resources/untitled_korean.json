@@ -13,5 +13,6 @@
     ["태양계 8번째 행성", "해왕성"],
     ["태양계 9번째 행성", "피자행성"]
   ],
-  "shuffle": true
+  "shuffle": true,
+  "numberOfChoices": 4
 }

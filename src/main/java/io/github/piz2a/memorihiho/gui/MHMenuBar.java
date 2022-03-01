@@ -4,154 +4,111 @@ import javax.swing.*;
 
 import io.github.piz2a.memorihiho.MemoriHiHo;
 import io.github.piz2a.memorihiho.MenuItemActions;
-import org.json.simple.*;
-import org.json.simple.parser.*;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.net.URL;
-import java.util.Iterator;
+import java.nio.charset.StandardCharsets;
 
-public class MHMenuBar {
+public class MHMenuBar extends JMenuBar {
 
     private final MemoriHiHo frame;
-    private final JMenuBar menuBar = new JMenuBar();
 
     public MHMenuBar(MemoriHiHo frame) {
+        super();
         this.frame = frame;
         create();
     }
 
     private void create() {
+        JMenu fileMenu = new JMenu(frame.getLanguage().getProperty("menuBar.file"));
+        fileMenu.add(getIconMenuItem("new_file", e -> MenuItemActions.FileActions.newFile(frame)));
+        fileMenu.add(getIconMenuItem("open", e -> MenuItemActions.FileActions.open(frame)));
+        /*if (frame.getSettings().getProperty("showRecentFiles").equals("true")) {
+            fileMenu.add(getRecentFilesSubMenu());
+        }*/
+        fileMenu.addSeparator();
+        fileMenu.add(getIconMenuItem("edit", e -> MenuItemActions.FileActions.edit(frame)));
+        fileMenu.addSeparator();
+        fileMenu.add(getIconMenuItem("settings", e -> MenuItemActions.FileActions.settings(frame)));
+        fileMenu.addSeparator();
+        fileMenu.add(getIconMenuItem("save", e -> MenuItemActions.FileActions.save(frame)));
+        fileMenu.add(getIconMenuItem("save_as", e -> MenuItemActions.FileActions.saveAs(frame)));
+        fileMenu.addSeparator();
+        fileMenu.add(getIconMenuItem("exit", e -> MenuItemActions.FileActions.exit(frame)));
+        add(fileMenu);
 
-        // Open and read menubar.json
-        String jsonData = frame.getTextFileReader().getStringFromResources("menubar.json");
-        //System.out.println(jsonData);
+        JMenu testMenu = new JMenu(frame.getLanguage().getProperty("menuBar.test"));
+        testMenu.add(getIconMenuItem("subjective_test", e -> MenuItemActions.TestActions.subjectiveTest(frame)));
+        testMenu.add(getIconMenuItem("multiple_choice_test", e -> MenuItemActions.TestActions.multipleChoiceTest(frame)));
+        testMenu.add(getIconMenuItem("reversed_subjective_test", e -> MenuItemActions.TestActions.reversedSubjectiveTest(frame)));
+        testMenu.add(getIconMenuItem("reversed_multiple_choice_test", e -> MenuItemActions.TestActions.reversedMultipleChoiceTest(frame)));
+        add(testMenu);
 
-        // Parse json
-        JSONParser parser = new JSONParser();
-        try {
-            JSONArray menuBarData = (JSONArray) parser.parse(jsonData);
-
-            // Add menu
-            addMenu(menuBarData);
-
-            // Key bindings
-
-            //menuBar.requestFocus();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
+        JMenu helpMenu = new JMenu(frame.getLanguage().getProperty("menuBar.help"));
+        helpMenu.add(getIconMenuItem("manual", e -> MenuItemActions.HelpActions.manual(frame)));
+        helpMenu.add(getIconMenuItem("about", e -> MenuItemActions.HelpActions.about(frame)));
+        add(helpMenu);
     }
 
-    private void addMenu(JSONArray menuBarData) {
+    private JMenuItem getIconMenuItem(String menuItemName, ActionListener actionListener) {
+        return getMenuItem(menuItemName, frame.getLanguage().getProperty("menuBarItem." + menuItemName), true, actionListener);
+    }
 
-        for (Object i : menuBarData) {
-
-            // Creates menu object
-            JSONObject menuObject = (JSONObject) i;
-            String menuName = (String) menuObject.get("menuName");
-            JMenu menu = new JMenu(frame.getLanguage().getProperty("menuBar." + menuName)) {
-                // Set menu size
-                @Override
-                public Dimension getPreferredSize() {
-                    Dimension d = super.getPreferredSize();
-                    d.width = Math.max(d.width, 40);
-                    d.height = Math.max(d.height, 30);
-                    return d;
-                }
-            };
-            //menu.setFont(font);
-
-            // Add items
-            JSONArray itemsArray = (JSONArray) menuObject.get("items");
-            for (Iterator<Object> j = itemsArray.iterator(); j.hasNext();) {
-                // Separated
-                for (Object menuItemObject : (JSONArray) j.next()) {
-                    // Add an item
-                    String menuItemName = (String) menuItemObject;
-                    JMenuItem item = new JMenuItem(frame.getLanguage().getProperty("menuBarItem." + menuItemName)) {
-                        // Set item size
-                        @Override
-                        public Dimension getPreferredSize() {
-                            Dimension d = super.getPreferredSize();
-                            d.width = Math.max(d.width, 40);
-                            d.height = Math.max(d.height, 30);
-                            return d;
-                        }
-                    };
-
-                    URL iconResource = frame.classloader.getResource(String.format("icons/menubar/%s.png", menuItemName));
-                    if (iconResource != null)
-                        item.setIcon(new ImageIcon(iconResource));
-
-                    item.addActionListener(getActionListener(menuItemName));
-
-                    menu.add(item);
-                }
-                if (j.hasNext())
-                    menu.addSeparator();
+    private JMenuItem getMenuItem(String menuItemName, String menuItemText, boolean icon, ActionListener actionListener) {
+        JMenuItem item = new JMenuItem(menuItemText) {
+            // Set item size
+            @Override
+            public Dimension getPreferredSize() {
+                Dimension d = super.getPreferredSize();
+                d.width = Math.max(d.width, 40);
+                d.height = Math.max(d.height, 30);
+                return d;
             }
-
-            // Add menu object
-            menuBar.add(menu);
-
+        };
+        if (icon) {
+            URL iconResource = frame.classloader.getResource(String.format("icons/menubar/%s.png", menuItemName));
+            if (iconResource != null)
+                item.setIcon(new ImageIcon(iconResource));
         }
+        item.addActionListener(actionListener);
 
+        return item;
     }
 
-    public JMenuBar getMenuBar() {
-        return menuBar;
+    private JMenu getSubMenu(String menuItemText, String menuItemName, boolean icon) {
+        JMenu menu = new JMenu(menuItemText) {
+            // Set item size
+            @Override
+            public Dimension getPreferredSize() {
+                Dimension d = super.getPreferredSize();
+                d.width = Math.max(d.width, 40);
+                d.height = Math.max(d.height, 30);
+                return d;
+            }
+        };
+        if (icon) {
+            URL iconResource = frame.classloader.getResource(String.format("icons/menubar/%s.png", menuItemName));
+            if (iconResource != null)
+                menu.setIcon(new ImageIcon(iconResource));
+        }
+
+        return menu;
     }
 
-    private ActionListener getActionListener(String actionName) {
-        ActionListener listener = e -> {};
-        switch(actionName) {
-            case "new_file":
-                listener = e -> MenuItemActions.FileActions.newFile(frame);
-                break;
-            case "open":
-                listener = e -> MenuItemActions.FileActions.open(frame);
-                break;
-            case "recent_files":
-                listener = e -> MenuItemActions.FileActions.recentFiles();
-                break;
-            case "edit":
-                listener = e -> MenuItemActions.FileActions.edit(frame);
-                break;
-            case "settings":
-                listener = e -> MenuItemActions.FileActions.settings(frame);
-                break;
-            case "save":
-                listener = e -> MenuItemActions.FileActions.save(frame);
-                break;
-            case "save_as":
-                listener = e -> MenuItemActions.FileActions.saveAs(frame);
-                break;
-            case "exit":
-                listener = e -> MenuItemActions.FileActions.exit(frame);
-                break;
-            case "subjective_test":
-                listener = e -> MenuItemActions.TestActions.subjectiveTest(frame);
-                break;
-            case "multiple_choice_test":
-                listener = e -> MenuItemActions.TestActions.multipleChoiceTest(frame);
-                break;
-            case "reversed_subjective_test":
-                listener = e -> MenuItemActions.TestActions.reversedSubjectiveTest(frame);
-                break;
-            case "reversed_multiple_choice_test":
-                listener = e -> MenuItemActions.TestActions.reversedMultipleChoiceTest(frame);
-                break;
-            case "manual":
-                listener = e -> MenuItemActions.HelpActions.manual(frame);
-                break;
-            case "about":
-                listener = e -> MenuItemActions.HelpActions.about(frame);
-                break;
+    private JMenu getRecentFilesSubMenu() {
+        JMenu menu = getSubMenu(frame.getLanguage().getProperty("menuBarItem.recent_files"), "recent_files", true);
+        for (int i = 0; i < Integer.parseInt(frame.getDefaultVariables().getProperty("numberOfRecentFiles")); i++) {
+            if (frame.getSettings().containsKey(String.format("recentFiles.%d", i))) {
+                String path = new String(frame.getSettings().getProperty(String.format("recentFiles.%d", i)).getBytes(), StandardCharsets.UTF_8);
+                if (path.length() != 0) {
+                    String[] split = path.split("/");
+                    menu.add(getMenuItem(null, split[split.length - 1], false, e -> MenuItemActions.FileActions.openFile(frame, new File(path))));
+                }
+            }
         }
-        return listener;
+        return menu;
     }
 
 }

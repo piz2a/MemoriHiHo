@@ -20,6 +20,7 @@ public class EditPanel extends MHPanel {
     class TopPanel extends JPanel {
         JTextField titleTextField, authorTextField, descriptionTextField;
         JCheckBox shuffleCheckBox;
+        JSpinner numberSpinner;
 
         private TopPanel() {
             setLayout(new BorderLayout());
@@ -54,8 +55,13 @@ public class EditPanel extends MHPanel {
 
             descriptionPanel.add(new JLabel(String.format("%s: ", frame.getLanguage().getProperty("editPanel.label.description"))));
 
-            descriptionTextField = new JTextField((String) frame.getCurrentFileObject().get("description"), 48);
+            descriptionTextField = new JTextField((String) frame.getCurrentFileObject().get("description"), 25);
             descriptionPanel.add(descriptionTextField);
+
+            descriptionPanel.add(new JLabel(frame.getLanguage().getProperty("editPanel.spinner.numberOfChoices")));
+
+            numberSpinner = new JSpinner(new SpinnerNumberModel((Long) frame.getCurrentFileObject().get("numberOfChoices"), Long.valueOf(1), Long.valueOf(100), Long.valueOf(1)));
+            descriptionPanel.add(numberSpinner);
 
             return descriptionPanel;
         }
@@ -302,9 +308,21 @@ public class EditPanel extends MHPanel {
         mtObject.put("author", TopPanel.authorTextField.getText());
         mtObject.put("description", TopPanel.descriptionTextField.getText());
         mtObject.put("shuffle", TopPanel.shuffleCheckBox.isSelected());
+        mtObject.put("numberOfChoices", TopPanel.numberSpinner.getValue());
 
         JSONArray elementsArray = new JSONArray();
         CenterPanel displayPanel = (CenterPanel) centerPanel;
+        if ((Long) TopPanel.numberSpinner.getValue() > displayPanel.getComponentCount()) {  // 선택지 수가 문제 수보다 많으면
+            JOptionPane.showMessageDialog(
+                    frame,
+                    frame.getLanguage().getProperty("editPanel.message.tooManyNumberOfChoices"),
+                    frame.getLanguage().getProperty("editPanel.message.tooManyNumberOfChoices.title"),
+                    JOptionPane.WARNING_MESSAGE
+            );
+            System.out.println("Failed to apply changes.");
+            return;
+        }
+
         for (Component component : displayPanel.getComponents()) {
             CenterPanel.ItemPanel itemPanel = (CenterPanel.ItemPanel) component;
             CenterPanel.ItemPanel.ElementItemPanel elementItemPanel = itemPanel.elementItemPanel;
