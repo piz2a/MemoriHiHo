@@ -2,7 +2,6 @@ package io.github.piz2a.memorihiho.gui.panels;
 
 import io.github.piz2a.memorihiho.MemoriHiHo;
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -153,6 +152,9 @@ public class MultipleChoiceTestPanel extends TestPanel {
                         // j가 10-i 이상일 때는 i+1이상 size 미만의 범위에서 numberOfChoices 만큼 수를 고를 수 없으므로 나머지는 어쩔 수 없이 i 미만의 수를 선택
                         // ex) j >= 3, j = 3
                         optionAnswerNumber = random.nextInt(i);
+                        while (optionAnswerNumbers.contains(optionAnswerNumber)) {
+                            optionAnswerNumber = random.nextInt(i);
+                        }
                     }
                     optionAnswerNumbers.add(optionAnswerNumber);
                     //System.out.println(optionAnswerNumber);

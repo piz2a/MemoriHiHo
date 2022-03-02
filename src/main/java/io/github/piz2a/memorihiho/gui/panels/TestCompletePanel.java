@@ -4,20 +4,27 @@ import io.github.piz2a.memorihiho.MemoriHiHo;
 import io.github.piz2a.memorihiho.gui.PanelManager;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class TestCompletePanel extends MHPanel {
 
     String testName;
+    int numberOfQuestions;
+    int questionsSolved;
     double score;
+    double totalTime;
 
     public TestCompletePanel(MemoriHiHo frame) {
         super(frame);
     }
 
-    public void receiveTestInfo(String testName, double score) {
+    public void receiveTestInfo(String testName, int numberOfQuestions, int questionsSolved, double score, double totalTime) {
         this.testName = testName;
+        this.numberOfQuestions = numberOfQuestions;
+        this.questionsSolved = questionsSolved;
         this.score = score;
+        this.totalTime = totalTime;
     }
 
     class TopPanel extends JPanel {
@@ -41,11 +48,45 @@ public class TestCompletePanel extends MHPanel {
 
     class CenterPanel extends JPanel {
         CenterPanel() {
+            setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+            setBorder(new EmptyBorder(40, 20, 20, 40));
+
             JLabel scoreLabel = new JLabel(
                     String.format("%s: %.2f/100", frame.getLanguage().getProperty("testCompletePanel.scoreLabel"), score)
             );
             scoreLabel.setFont(new Font(frame.getLanguage().getProperty("font"), Font.PLAIN, 24));
+            scoreLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
             add(scoreLabel);
+
+            JLabel questionsSolvedLabel = new JLabel(
+                    String.format("%s: %d/%d", frame.getLanguage().getProperty("testCompletePanel.questionsSolvedLabel"), questionsSolved, numberOfQuestions)
+            );
+            questionsSolvedLabel.setFont(new Font(frame.getLanguage().getProperty("font"), Font.PLAIN, 24));
+            questionsSolvedLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+            add(questionsSolvedLabel);
+
+            JLabel totalTimeLabel = new JLabel(
+                    String.format("%s: %.1fs", frame.getLanguage().getProperty("testCompletePanel.totalTimeLabel"), totalTime)
+            );
+            totalTimeLabel.setFont(new Font(frame.getLanguage().getProperty("font"), Font.PLAIN, 24));
+            totalTimeLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+            add(totalTimeLabel);
+
+            JLabel averageTimeLabel = new JLabel(
+                    String.format("%s: %.1fs", frame.getLanguage().getProperty("testCompletePanel.averageTimeLabel"), totalTime / numberOfQuestions)
+            );
+            averageTimeLabel.setFont(new Font(frame.getLanguage().getProperty("font"), Font.PLAIN, 24));
+            averageTimeLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+            add(averageTimeLabel);
+
+            JLabel impressionLabel = new JLabel(
+                    frame.getLanguage().getProperty("testCompletePanel.impressionLabel." + (int)(score/20))
+            );
+            impressionLabel.setFont(new Font(frame.getLanguage().getProperty("font"), Font.BOLD, 36));
+            impressionLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+            impressionLabel.setForeground(new Color(0x09A527));
+            impressionLabel.setBorder(new EmptyBorder(40, 0, 0, 0));
+            add(impressionLabel);
         }
     }
 

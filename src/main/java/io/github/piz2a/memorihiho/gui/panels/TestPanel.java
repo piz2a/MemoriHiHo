@@ -19,8 +19,10 @@ public abstract class TestPanel extends MHPanel {
     JSONObject fileObject;
     JSONArray elements;
     int testLength;
+    int questionsSolved;
     int index;
     double score;  // out of 'maximumScore'
+    double totalTime;
     private boolean testing;
 
     public TestPanel(MemoriHiHo frame) {
@@ -31,6 +33,8 @@ public abstract class TestPanel extends MHPanel {
     public void initialize() {
         index = -1;
         score = 0;
+        questionsSolved = 0;
+        totalTime = 0;
         fileObject = frame.getCurrentFileObject();
         elements = (JSONArray) fileObject.get("elements");
         testLength = elements.size();
@@ -135,7 +139,9 @@ public abstract class TestPanel extends MHPanel {
 
         public void check() {  // 점수 갱신, 체크 아이콘 표시
             rightBottomPanel.checkLabel.setCheckIcon(((DefaultCenterPanel) centerPanel).ratio() >= 1);
+            if (((DefaultCenterPanel) centerPanel).ratio() == 1) questionsSolved++;
             score += ((DefaultCenterPanel) centerPanel).score();
+            totalTime += leftBottomPanel.timerLabel.timeElapsed;
             rightBottomPanel.scoreLabel.refresh();
             rightBottomPanel.nextButton.requestFocus();
         }
@@ -148,12 +154,13 @@ public abstract class TestPanel extends MHPanel {
             }
 
             class TimerLabel extends JLabel {
+                double timeElapsed;
                 TimerLabel() {
                     setFont(new Font(frame.getLanguage().getProperty("font"), Font.PLAIN, 40));
                 }
                 void startTimer() {
                     new Thread(() -> {
-                        double timeElapsed = 0;
+                        timeElapsed = 0;
                         while (isTesting()) {
                             timeElapsed += 0.1;
                             setText(String.format("%.1f", timeElapsed));
@@ -276,7 +283,7 @@ public abstract class TestPanel extends MHPanel {
         elements = null;
         index = -1;
         ((TestCompletePanel) frame.getPanelManager().getPanelByName(PanelManager.TEST_COMPLETE_PANEL))
-                .receiveTestInfo(getTestType(), score);
+                .receiveTestInfo(getTestType(), testLength, questionsSolved, score, totalTime);
         frame.getPanelManager().setPanel(PanelManager.TEST_COMPLETE_PANEL);
     }
 
