@@ -18,6 +18,7 @@ public abstract class MHDialog extends JDialog {
         this.dialogName = dialogName;
         this.frame = frame;
         this.panel = panel;
+        this.setResizable(false);
     }
 
     private void initialize() {
