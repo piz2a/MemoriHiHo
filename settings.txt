@@ -1,2 +1,0 @@
-#Wed Mar 02 08:24:30 KST 2022
-lang=korean
