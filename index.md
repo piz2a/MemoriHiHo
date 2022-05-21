@@ -1,6 +1,7 @@
 ## MemoriHiHo
 
-MemoriHiHo는 단어나 문장을 암기할 때 도움을 주는 프로그램입니다.
+MemoriHiHo는 단어나 문장을 암기할 때 도움을 주는 프로그램입니다.<br>
+[다운로드 (v0.1 한국어)](https://github.com/piz2a/MemoriHiHo/releases/download/0.1/MemoriHiHo-0.1-Korean.exe)
 <details><summary><h4>첫 화면</h4></summary>
 <p>
 <img src="screenshots/preview.png"><br>
